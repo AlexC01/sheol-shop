@@ -7,7 +7,7 @@ const types = ["men", "women"];
 
 router.get("/api/categories", (async (_req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate("subcategories");
     res.send(categories);
   } catch (err) {
     res.status(500).send("Error while fetching categories");
