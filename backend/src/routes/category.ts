@@ -27,4 +27,14 @@ router.post("/api/categories", (async (req, res) => {
   }
 }) as RequestHandler);
 
+router.delete("/api/categories/:id", (async (req, res) => {
+  try {
+    const category = await Category.findByIdAndDelete({ _id: req.params.id });
+    if (category === null) return res.status(404).send();
+    return res.send(category);
+  } catch (err) {
+    return res.status(500).send();
+  }
+}) as RequestHandler);
+
 export default router;
