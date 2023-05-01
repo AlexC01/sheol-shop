@@ -12,4 +12,14 @@ router.get("/api/colors", (async (_req, res) => {
   }
 }) as RequestHandler);
 
+router.post("/api/colors", (async (req, res) => {
+  try {
+    const color = new Color(req.body);
+    await color.save();
+    res.send(color);
+  } catch (err) {
+    res.status(400).send("Error while creating color");
+  }
+}) as RequestHandler);
+
 export default router;

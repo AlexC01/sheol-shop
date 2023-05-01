@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const colorSchema = new mongoose.Schema(
   {
-    name: { type: String, trim: true, required: true, unique: true }
+    name: { type: String, trim: true, required: true, unique: true },
+    value: { type: String, trim: true }
   },
   { toJSON: { virtuals: true } }
 );

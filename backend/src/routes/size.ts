@@ -12,4 +12,14 @@ router.get("/api/sizes", (async (_req, res) => {
   }
 }) as RequestHandler);
 
+router.post("/api/sizes", (async (req, res) => {
+  try {
+    const size = new Size(req.body);
+    await size.save();
+    res.send(size);
+  } catch (err) {
+    res.status(400).send("Error while creating size");
+  }
+}) as RequestHandler);
+
 export default router;
