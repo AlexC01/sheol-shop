@@ -14,6 +14,16 @@ router.get("/api/categories", (async (_req, res) => {
   }
 }) as RequestHandler);
 
+router.get("/api/categories/:id", (async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id).populate("subcategories");
+    if (category === null) throw new Error();
+    return res.send(category);
+  } catch (err) {
+    return res.status(404).send();
+  }
+}) as RequestHandler);
+
 router.post("/api/categories", (async (req, res) => {
   try {
     if (!types.includes(req.body.type)) {
