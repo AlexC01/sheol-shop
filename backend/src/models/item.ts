@@ -29,6 +29,12 @@ const itemSchema = new mongoose.Schema(
   { toJSON: { virtuals: true }, timestamps: true }
 );
 
+itemSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "item"
+});
+
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.variations.forEach(variation => {
