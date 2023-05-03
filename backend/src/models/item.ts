@@ -34,7 +34,9 @@ itemSchema.pre("save", async function (next) {
   item.variations.forEach(variation => {
     variation.totalStock = variation.sizes.reduce((acc, curr) => acc + curr.stock, 0);
   });
-  if (item.discount !== undefined) item.discountPrice = item.price - (item.price * item.discount) / 100;
+  if (item.discount !== undefined && item.discount > 0)
+    item.discountPrice = item.price - (item.price * item.discount) / 100;
+  else item.discountPrice = 0;
   next();
 });
 
