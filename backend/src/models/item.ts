@@ -23,8 +23,9 @@ const itemSchema = new mongoose.Schema(
       }
     ],
     discount: { type: Number, required: false, default: 0 },
-    discountPrice: { type: Number, required: false, default: 0 }
-    // reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }]
+    discountPrice: { type: Number, required: false, default: 0 },
+    rate: { type: Number, required: false, default: 0 },
+    totalReviews: { type: Number, required: false, default: 0 }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );
