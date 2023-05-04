@@ -20,7 +20,8 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": "error",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/restrict-plus-operands": "off"
   },
   globals: { process: true, __dirname: true }
 };
