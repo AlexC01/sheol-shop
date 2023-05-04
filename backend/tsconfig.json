@@ -9,7 +9,8 @@
       "@routes/*": ["src/routes/*"],
       "@models/*": ["src/models/*"],
       "@interfaces/*": ["src/interfaces/*"],
-      "@db/*": ["src/db/*"]
+      "@db/*": ["src/db/*"],
+      "@middleware/*": ["src/middleware/*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
