@@ -13,13 +13,18 @@ const upload = multer({
   }
 });
 
-router.get("/api/items", (async (_req, res) => {
+router.get("/api/items", (async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
   try {
     const items = await Item.find()
+      .limit(+limit)
+      .skip((+page - 1) * +limit)
       .populate("subcategory")
       .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
       .populate({ path: "variations", populate: { path: "color" } });
-    res.send(items);
+
+    const count = await Item.countDocuments();
+    res.status(200).send({ totalPages: Math.ceil(count / +limit), currentPage: page, items });
   } catch (err) {
     res.status(500).send("Error while fetching items");
   }
