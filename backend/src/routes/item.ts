@@ -14,8 +14,19 @@ const upload = multer({
 });
 
 router.get("/api/items", (async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 2 } = req.query;
   try {
+    const count = await Item.countDocuments();
+    const totalPages = Math.ceil(count / +limit);
+    if (req.query.search !== undefined) {
+      const items = await Item.find({ name: { $regex: req.query.search, $options: "i" } })
+        .limit(+limit)
+        .skip((+page - 1) * +limit)
+        .populate("subcategory")
+        .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
+        .populate({ path: "variations", populate: { path: "color" } });
+      return res.status(200).send({ totalPages, currentPage: page, items });
+    }
     const items = await Item.find()
       .limit(+limit)
       .skip((+page - 1) * +limit)
@@ -23,10 +34,9 @@ router.get("/api/items", (async (req, res) => {
       .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
       .populate({ path: "variations", populate: { path: "color" } });
 
-    const count = await Item.countDocuments();
-    res.status(200).send({ totalPages: Math.ceil(count / +limit), currentPage: page, items });
+    return res.status(200).send({ totalPages, currentPage: page, items });
   } catch (err) {
-    res.status(500).send("Error while fetching items");
+    return res.status(500).send("Error while fetching items");
   }
 }) as RequestHandler);
 
