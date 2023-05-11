@@ -1,9 +1,24 @@
 import express, { type RequestHandler } from "express";
 import User from "@models/user";
+import auth from "@middleware/auth";
+import { USER_ROLES } from "@constants/roles";
 
 const router = express.Router();
 
 const UserModel = User as any;
+
+router.get("/api/users", auth, (async (req, res) => {
+  try {
+    const { user } = req as any;
+    if (user.role === USER_ROLES.user) {
+      return res.status(403).send({ message: "You don't have permission to do that" });
+    }
+    const users = await UserModel.find();
+    return res.status(200).send(users);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}) as RequestHandler);
 
 router.post("/api/users", (async (req, res) => {
   try {

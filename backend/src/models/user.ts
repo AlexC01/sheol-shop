@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { USER_ROLES } from "@constants/roles";
 
 const userSchema = new mongoose.Schema(
   {
@@ -32,7 +33,7 @@ const userSchema = new mongoose.Schema(
       }
     },
     tokens: [{ token: { type: String, required: true } }],
-    role: { type: String, required: false, default: "user" },
+    role: { type: String, required: false, default: USER_ROLES.user },
     avatar: { type: Buffer, required: false }
   },
   { toJSON: { virtuals: true }, timestamps: true }
@@ -41,6 +42,8 @@ const userSchema = new mongoose.Schema(
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
+
+  userObject.id = userObject._id;
 
   delete userObject.password;
   delete userObject.tokens;
