@@ -7,6 +7,7 @@ import sizeRouter from "@routes/size";
 import colorRouter from "@routes/color";
 import itemRouter from "@routes/item";
 import reviewRouter from "@routes/review";
+import userRouter from "@routes/user";
 
 void connectMongo();
 
@@ -15,7 +16,7 @@ const PORT = process.env.PORT ?? 3030;
 
 app.use(express.json());
 app.use(cors());
-app.use([categoryRouter, subcategoryRouter, sizeRouter, colorRouter, itemRouter, reviewRouter]);
+app.use([categoryRouter, subcategoryRouter, sizeRouter, colorRouter, itemRouter, reviewRouter, userRouter]);
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

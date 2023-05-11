@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     },
     tokens: [{ token: { type: String, required: true } }],
     role: { type: String, required: false, default: "user" },
-    avatar: { type: Buffer }
+    avatar: { type: Buffer, required: false }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );
@@ -57,7 +57,7 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 userSchema.statics.findByCredentials = async (email: string, password: string) => {
-  const user = await User.findOne({ email });
+  const user = await Users.findOne({ email });
   if (!user) throw new Error("Unable to login");
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Unable to login");
@@ -72,6 +72,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.model("User", userSchema);
+const Users = mongoose.model("User", userSchema);
 
-export default User;
+export default Users;
