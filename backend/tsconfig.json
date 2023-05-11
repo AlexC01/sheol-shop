@@ -10,7 +10,8 @@
       "@models/*": ["src/models/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@db/*": ["src/db/*"],
-      "@middleware/*": ["src/middleware/*"]
+      "@middleware/*": ["src/middleware/*"],
+      "@constants/*": ["src/constants/*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
