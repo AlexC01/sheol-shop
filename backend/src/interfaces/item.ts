@@ -13,6 +13,7 @@ interface Variations {
 }
 
 export interface ItemInterface {
+  _id: Types.ObjectId;
   name: string;
   description: string;
   price: number;
