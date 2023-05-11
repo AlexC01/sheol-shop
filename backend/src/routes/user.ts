@@ -20,6 +20,15 @@ router.get("/api/users", auth, (async (req, res) => {
   }
 }) as RequestHandler);
 
+router.get("/api/users/me", auth, (async (req, res) => {
+  try {
+    const { user } = req as any;
+    return res.status(200).send(user);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}) as RequestHandler);
+
 router.post("/api/users", (async (req, res) => {
   try {
     const user = new UserModel(req.body);
