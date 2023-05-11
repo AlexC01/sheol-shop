@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/api/cart", auth, (async (req, res) => {
   try {
     const { user } = req as any;
-    const cart = await Cart.findOne({ user }).populate("items.item");
+    const cart = await Cart.findOne({ user }).populate("items.item").populate("items.color").populate("items.size");
     if (cart === null) {
       const body = {
         user: user._id,

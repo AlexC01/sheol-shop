@@ -24,14 +24,16 @@ const cartSchema = new mongoose.Schema(
 cartSchema.pre("save", async function (next) {
   const newCart = this as any;
   await newCart.populate("items.item");
+  await newCart.populate("items.color");
+  await newCart.populate("items.size");
   const cart: CartInterface = newCart;
   cart.total = cart.items.reduce((acc, curr) => acc + curr.price, 0);
   cart.totalItems = cart.items.length;
   if (cart.items.length > 0) {
     const newItems = cart.items.map(itemOld => {
       const findVariation = itemOld.item.variations
-        .find(variation => variation.color.toString() === itemOld.color.toString())
-        ?.sizes.find(sizeOld => sizeOld.size.toString() === itemOld.size.toString());
+        .find(variation => variation.color.toString() === itemOld.color.id.toString())
+        ?.sizes.find(sizeOld => sizeOld.size.toString() === itemOld.size.id.toString());
       if (findVariation !== undefined) return { ...itemOld, outOfStock: findVariation.stock < itemOld.quantity };
       return itemOld;
     });
