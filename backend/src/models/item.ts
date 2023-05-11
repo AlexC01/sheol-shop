@@ -11,7 +11,6 @@ const itemSchema = new mongoose.Schema(
     subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory", required: true },
     variations: [
       {
-        id: { type: Number, required: false },
         color: { type: mongoose.Schema.Types.ObjectId, ref: "Color", required: true },
         images: [{ type: Buffer, required: true }],
         sizes: [
@@ -40,7 +39,6 @@ itemSchema.virtual("reviews", {
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.variations.forEach(variation => {
-    variation.id = item.variations.indexOf(variation);
     variation.totalStock = variation.sizes.reduce((acc, curr) => acc + curr.stock, 0);
   });
   if (item.discount !== undefined && item.discount > 0)
