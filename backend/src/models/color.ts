@@ -14,6 +14,12 @@ colorSchema.virtual("items", {
   foreignField: "color"
 });
 
+colorSchema.virtual("carts", {
+  ref: "Cart",
+  localField: "_id",
+  foreignField: "color"
+});
+
 const Colors = mongoose.model("Color", colorSchema);
 
 export default Colors;

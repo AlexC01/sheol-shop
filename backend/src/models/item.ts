@@ -36,6 +36,12 @@ itemSchema.virtual("reviews", {
   foreignField: "item"
 });
 
+itemSchema.virtual("carts", {
+  ref: "Cart",
+  localField: "_id",
+  foreignField: "item"
+});
+
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.variations.forEach(variation => {

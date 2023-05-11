@@ -14,6 +14,12 @@ sizeSchema.virtual("items", {
   foreignField: "size"
 });
 
+sizeSchema.virtual("carts", {
+  ref: "Cart",
+  localField: "_id",
+  foreignField: "size"
+});
+
 const Sizes = mongoose.model("Size", sizeSchema);
 
 export default Sizes;
