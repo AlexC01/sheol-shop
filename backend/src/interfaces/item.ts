@@ -6,6 +6,7 @@ interface Sizes {
 }
 
 interface Variations {
+  id?: number | undefined;
   color: Types.ObjectId;
   images: any;
   totalStock?: number;
