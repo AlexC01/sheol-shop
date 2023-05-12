@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/api/cart", auth, (async (req, res) => {
   try {
     const { user } = req as any;
-    const cart = await Cart.findOne({ user }).populate("items.item").populate("items.color").populate("items.size");
+    const cart = await Cart.findOne({ user }).populate("items.item").populate("items.size");
     if (cart === null) {
       const body = {
         user: user._id,
@@ -33,13 +33,10 @@ router.post("/api/cart", auth, (async (req, res) => {
     const cart = await Cart.findOne({ user });
     if (cart === null) return res.status(404).send();
     const findProduct = cart.items.findIndex(
-      itemOld =>
-        itemOld.item.toString() === body.item &&
-        itemOld.color.toString() === body.color &&
-        itemOld.size.toString() === body.size
+      itemOld => itemOld.item.toString() === body.item && itemOld.size.toString() === body.size
     );
     if (findProduct === -1) {
-      cart.items.push({ item: body.item, color: body.color, size: body.size, quantity: 1, price: body.price });
+      cart.items.push({ item: body.item, size: body.size, quantity: 1, price: body.price });
     } else {
       cart.items[findProduct].price = body.price;
       const quant = body.type === "add" ? cart.items[findProduct].quantity + 1 : cart.items[findProduct].quantity - 1;

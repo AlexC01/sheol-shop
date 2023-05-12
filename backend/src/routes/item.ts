@@ -23,16 +23,16 @@ router.get("/api/items", (async (req, res) => {
         .limit(+limit)
         .skip((+page - 1) * +limit)
         .populate("subcategory")
-        .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
-        .populate({ path: "variations", populate: { path: "color" } });
+        .populate({ path: "sizes", populate: { path: "size" } })
+        .populate("color");
       return res.status(200).send({ totalPages, currentPage: page, items });
     }
     const items = await Item.find()
       .limit(+limit)
       .skip((+page - 1) * +limit)
       .populate("subcategory")
-      .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
-      .populate({ path: "variations", populate: { path: "color" } });
+      .populate({ path: "sizes", populate: { path: "size" } })
+      .populate("color");
 
     return res.status(200).send({ totalPages, currentPage: page, items });
   } catch (err) {
@@ -40,15 +40,12 @@ router.get("/api/items", (async (req, res) => {
   }
 }) as RequestHandler);
 
-router.post("/api/items", upload.any(), (async (req, res) => {
+router.post("/api/items", upload.array("images"), (async (req, res) => {
   try {
     const obj = req.body;
-    const allImages = req.files as Express.Multer.File[];
-    for (let i = 0; i < obj.variations.length; i++) {
-      const images = allImages.filter(image => image.fieldname === `variations[${i}][images]`);
-      const transformation = images.map(image => image.buffer);
-      obj.variations[i].images = transformation;
-    }
+    const images = req.files as Express.Multer.File[];
+    const transformation = images.map(image => image.buffer);
+    obj.images = transformation;
     const item = new Item(obj);
     await item.save();
     return res.send(item);
@@ -61,8 +58,8 @@ router.get("/api/items/:id", (async (req, res) => {
   try {
     const item = await Item.findById(req.params.id)
       .populate("subcategory")
-      .populate({ path: "variations", populate: { path: "sizes", populate: "size" } })
-      .populate({ path: "variations", populate: { path: "color" } });
+      .populate({ path: "sizes", populate: { path: "size" } })
+      .populate("color");
     if (item === null) throw new Error();
     return res.send(item);
   } catch (err) {
@@ -75,18 +72,18 @@ router.put("/api/items/:id", upload.any(), (async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (item === null) throw new Error();
     const obj = req.body;
-    const allImages = req.files as Express.Multer.File[];
-    for (let i = 0; i < obj.variations.length; i++) {
-      const images = allImages.filter(image => image.fieldname === `variations[${i}][images]`);
+    const images = req.files as Express.Multer.File[];
+    if (images.length > 0) {
       const transformation = images.map(image => image.buffer);
-      obj.variations[i].images = transformation;
+      obj.images = transformation;
     }
+
     if (item !== null) {
       item.set(obj);
       await item.save();
       return res.send(item);
     }
-    return res.status(400);
+    return res.status(404).send();
   } catch (err) {
     return res.status(404).send();
   }

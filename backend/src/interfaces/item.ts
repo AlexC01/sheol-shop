@@ -5,20 +5,16 @@ interface Sizes {
   stock: number;
 }
 
-interface Variations {
-  color: Types.ObjectId;
-  images: any;
-  totalStock?: number;
-  sizes: Sizes[];
-}
-
 export interface ItemInterface {
   _id: Types.ObjectId;
   name: string;
+  images: any;
+  color: Types.ObjectId;
+  sizes: Sizes[];
+  totalStock?: number;
   description: string;
   price: number;
   subcategory: Types.ObjectId;
-  variations: Variations[];
   discount?: number;
   discountPrice?: number;
 }
