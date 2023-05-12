@@ -16,8 +16,7 @@ router.get("/api/subcategories/:id", (async (req, res) => {
   try {
     const subcategory = await SubCategory.findById(req.params.id)
       .populate("category")
-      .populate({ path: "items", populate: { path: "variations", populate: { path: "sizes", populate: "size" } } })
-      .populate({ path: "items", populate: { path: "variations", populate: { path: "color" } } });
+      .populate({ path: "items", populate: { path: "sizes", populate: { path: "size" } } });
     if (subcategory === null) throw new Error();
     return res.send(subcategory);
   } catch (err) {
