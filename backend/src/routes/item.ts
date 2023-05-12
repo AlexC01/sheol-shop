@@ -1,6 +1,8 @@
 import express, { type RequestHandler } from "express";
 import multer from "multer";
 import Item from "@models/item";
+import SubCategories from "@models/subcategory";
+import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_VALIDATIONS } from "@constants/sorts";
 
 const router = express.Router();
 
@@ -35,6 +37,66 @@ router.get("/api/items", (async (req, res) => {
       .populate("color");
 
     return res.status(200).send({ totalPages, currentPage: page, items });
+  } catch (err) {
+    return res.status(500).send("Error while fetching items");
+  }
+}) as RequestHandler);
+
+router.get("/api/items/:id/subcategory", (async (req, res) => {
+  const {
+    page = 1,
+    limit = 7,
+    sortBy = DEFAULT_SORT_BY,
+    sortOrder = DEFAULT_SORT_ORDER,
+    sizes,
+    colors,
+    minPrice,
+    maxPrice
+  } = req.query;
+  const { id } = req.params;
+
+  const sortByParam = SORT_VALIDATIONS.validSortBy.includes(sortBy as string)
+    ? (sortBy as any)
+    : (DEFAULT_SORT_BY as any);
+  const sortOrderParam = SORT_VALIDATIONS.validSortOrder.includes(sortOrder as string)
+    ? (sortOrder as any)
+    : (DEFAULT_SORT_ORDER as any);
+
+  const query = {} as any;
+
+  query.subcategory = id;
+
+  if (sizes !== undefined) {
+    query.sizes = { $elemMatch: { size: { $in: [sizes] }, stock: { $gt: 0 } } };
+  } else {
+    query.totalStock = { $gt: 0 };
+  }
+
+  if (colors !== undefined) {
+    query.color = { $in: [colors] };
+  }
+
+  if (minPrice !== undefined) {
+    query.price = { $gte: parseFloat(minPrice as string) };
+  }
+
+  if (maxPrice !== undefined) {
+    query.price = { ...query.price, $lte: parseFloat(maxPrice as string) };
+  }
+
+  try {
+    const totalDocuments = await Item.countDocuments(query);
+    const subcategory = await SubCategories.findById(req.params.id);
+    if (subcategory === null) throw new Error();
+    const items = await Item.find(query)
+      .sort({ [sortByParam]: sortOrderParam })
+      .limit(+limit)
+      .skip((+page - 1) * +limit)
+      .populate({ path: "sizes", populate: { path: "size" } })
+      .populate("color");
+
+    const totalPages = Math.ceil(totalDocuments / +limit);
+    return res.status(200).send({ name: subcategory.name, totalPages, currentPage: page, items });
   } catch (err) {
     return res.status(500).send("Error while fetching items");
   }
