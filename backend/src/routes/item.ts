@@ -3,7 +3,7 @@ import multer from "multer";
 import Item from "@models/item";
 import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
-import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_VALIDATIONS } from "@constants/sorts";
+import { getQuery, pages } from "src/helpers/query";
 
 const router = express.Router();
 
@@ -17,28 +17,20 @@ const upload = multer({
 });
 
 router.get("/api/items", (async (req, res) => {
-  const { page = 1, limit = 2 } = req.query;
+  const { sort, query } = getQuery(req);
+  const { page, limit, skip } = pages(req);
+
   try {
     const count = await Item.countDocuments();
     const totalPages = Math.ceil(count / +limit);
-    if (req.query.search !== undefined) {
-      const items = await Item.find({ name: { $regex: req.query.search, $options: "i" } })
-        .limit(+limit)
-        .skip((+page - 1) * +limit)
-        .populate("subcategory")
-        .populate({ path: "sizes", populate: { path: "size" } })
-        .populate("color")
-        .populate("brand");
-      return res.status(200).send({ totalPages, currentPage: page, items });
-    }
-    const items = await Item.find()
-      .limit(+limit)
-      .skip((+page - 1) * +limit)
+    const items = await Item.find(query)
+      .sort(sort)
+      .limit(limit)
+      .skip(skip)
       .populate("subcategory")
       .populate({ path: "sizes", populate: { path: "size" } })
       .populate("color")
       .populate("brand");
-
     return res.status(200).send({ totalPages, currentPage: page, items });
   } catch (err) {
     return res.status(500).send("Error while fetching items");
@@ -46,60 +38,20 @@ router.get("/api/items", (async (req, res) => {
 }) as RequestHandler);
 
 router.get("/api/items/:id/subcategory", (async (req, res) => {
-  const {
-    page = 1,
-    limit = 7,
-    sortBy = DEFAULT_SORT_BY,
-    sortOrder = DEFAULT_SORT_ORDER,
-    sizes,
-    colors,
-    brands,
-    minPrice,
-    maxPrice
-  } = req.query;
   const { id } = req.params;
 
-  const sortByParam = SORT_VALIDATIONS.validSortBy.includes(sortBy as string)
-    ? (sortBy as any)
-    : (DEFAULT_SORT_BY as any);
-  const sortOrderParam = SORT_VALIDATIONS.validSortOrder.includes(sortOrder as string)
-    ? (sortOrder as any)
-    : (DEFAULT_SORT_ORDER as any);
+  const { sort, query } = getQuery(req, id);
 
-  const query = {} as any;
-
-  query.subcategory = id;
-
-  if (sizes !== undefined) {
-    query.sizes = { $elemMatch: { size: { $in: [sizes] }, stock: { $gt: 0 } } };
-  } else {
-    query.totalStock = { $gt: 0 };
-  }
-
-  if (colors !== undefined) {
-    query.color = { $in: [colors] };
-  }
-
-  if (brands !== undefined) {
-    query.brand = { $in: [brands] };
-  }
-
-  if (minPrice !== undefined) {
-    query.price = { $gte: parseFloat(minPrice as string) };
-  }
-
-  if (maxPrice !== undefined) {
-    query.price = { ...query.price, $lte: parseFloat(maxPrice as string) };
-  }
+  const { page, limit, skip } = pages(req);
 
   try {
     const totalDocuments = await Item.countDocuments(query);
     const subcategory = await SubCategories.findById(req.params.id);
     if (subcategory === null) throw new Error();
     const items = await Item.find(query)
-      .sort({ [sortByParam]: sortOrderParam })
-      .limit(+limit)
-      .skip((+page - 1) * +limit)
+      .sort(sort)
+      .limit(limit)
+      .skip(skip)
       .populate({ path: "sizes", populate: { path: "size" } })
       .populate("color")
       .populate("brand");
@@ -111,13 +63,28 @@ router.get("/api/items/:id/subcategory", (async (req, res) => {
   }
 }) as RequestHandler);
 
-router.get("/api/items/:id/subcategory/filters", (async (req, res) => {
-  const { id } = req.params;
+router.get("/api/items/filters", (async (req, res) => {
+  const { subcategoryId, search } = req.body;
 
   const pipeline = [];
 
-  const subcategoryId = new mongoose.Types.ObjectId(id);
-  pipeline.push({ $match: { subcategory: subcategoryId } });
+  if (subcategoryId !== undefined) {
+    const catId = new mongoose.Types.ObjectId(subcategoryId);
+    pipeline.push({ $match: { subcategory: catId } });
+  }
+
+  if (search !== undefined) {
+    pipeline.push({ $match: { name: { $regex: search, $options: "i" } } });
+
+    pipeline.push({
+      $lookup: {
+        from: "subcategories",
+        localField: "subcategory",
+        foreignField: "_id",
+        as: "subcategories"
+      }
+    });
+  }
 
   pipeline.push({
     $lookup: {
@@ -137,8 +104,6 @@ router.get("/api/items/:id/subcategory/filters", (async (req, res) => {
     }
   });
 
-  // pipeline.push({ $unwind: "$sizes" });
-
   pipeline.push({
     $lookup: {
       from: "sizes",
@@ -156,6 +121,7 @@ router.get("/api/items/:id/subcategory/filters", (async (req, res) => {
       colors: { $addToSet: "$colors" },
       brands: { $addToSet: "$brands" },
       sizes: { $addToSet: "$sizes.size" },
+      subcategories: { $addToSet: "$subcategories" },
       minPrice: { $min: "$price" },
       maxPrice: { $max: "$price" }
     }
@@ -168,6 +134,7 @@ router.get("/api/items/:id/subcategory/filters", (async (req, res) => {
       availableFilters.colors = results[0].colors.flat();
       availableFilters.brands = results[0].brands.flat();
       availableFilters.sizes = results[0].sizes;
+      availableFilters.subcategories = results[0].subcategories.flat();
       availableFilters.minPrice = results[0].minPrice;
       availableFilters.maxPrice = results[0].maxPrice;
     }
