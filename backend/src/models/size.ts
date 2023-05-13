@@ -4,7 +4,7 @@ const sizeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     system: { type: String, required: true, enum: ["men", "women"] },
-    value: { type: String, trim: true, required: true }
+    value: { type: String, trim: true, required: false }
   },
   { toJSON: { virtuals: true } }
 );
