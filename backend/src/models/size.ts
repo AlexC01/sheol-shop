@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const sizeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    value: { type: String, trim: true, required: true, unique: true }
+    system: { type: String, required: true, enum: ["men", "women"] },
+    value: { type: String, trim: true, required: true }
   },
   { toJSON: { virtuals: true } }
 );
