@@ -67,4 +67,17 @@ router.delete("/api/cart", auth, (async (req, res) => {
   }
 }) as RequestHandler);
 
+router.post("/api/cart/items/remove", auth, (async (req, res) => {
+  try {
+    const { user } = req as any;
+    const cart = await Cart.findOne({ user });
+    if (cart === null) return res.status(404).send();
+    cart.items = [];
+    await cart.save();
+    return res.status(202).send(cart);
+  } catch (err) {
+    return res.status(500).send();
+  }
+}) as RequestHandler);
+
 export default router;
