@@ -1,22 +1,13 @@
 import express, { type RequestHandler } from "express";
-import multer from "multer";
+import upload from "@helpers/multer";
 import Item from "@models/item";
 import Cart from "@models/cart";
 import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
-import { getQuery, pages } from "src/helpers/query";
-import getDiscount from "src/helpers/price";
+import { getQuery, pages } from "@helpers/query";
+import getDiscount from "@helpers/price";
 
 const router = express.Router();
-
-const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 8
-  }
-});
 
 router.get("/api/items", (async (req, res) => {
   const { sort, query } = getQuery(req);
