@@ -37,6 +37,19 @@ router.post("/api/subcategories", upload.single("image"), async (req, res) => {
   }
 });
 
+router.put("/api/subcategories/:id", upload.single("image"), async (req, res) => {
+  const updates = req.body;
+  try {
+    const image = req.file as Express.Multer.File;
+    updates.image = image.buffer;
+    const subcategory = await SubCategory.findByIdAndUpdate(req.params.id, updates, { new: true });
+    if (subcategory === null) return res.status(404).send();
+    return res.status(202).send(subcategory);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
 router.delete("/api/subcategories/:id", async (req, res) => {
   try {
     const subcategory = await SubCategory.findByIdAndDelete({ _id: req.params.id });

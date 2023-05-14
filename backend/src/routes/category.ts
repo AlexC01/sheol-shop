@@ -40,6 +40,24 @@ router.post("/api/categories", upload.single("image"), async (req, res) => {
   }
 });
 
+router.patch("/api/categories/:id", upload.single("image"), async (req, res) => {
+  const updates = req.body;
+  try {
+    if (!types.includes(req.body.type)) {
+      return res.status(400).send({ error: "Invalid category type, should be `men` or `women`" });
+    }
+    const image = req.file as Express.Multer.File;
+    updates.image = image.buffer;
+    const category = await Category.findOne({ _id: req.params.id });
+    if (category === null) return res.status(404).send();
+    category.set(updates);
+    await category.save();
+    return res.send(category);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
 router.delete("/api/categories/:id", async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete({ _id: req.params.id });
