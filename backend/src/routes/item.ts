@@ -1,9 +1,11 @@
 import express, { type RequestHandler } from "express";
 import multer from "multer";
 import Item from "@models/item";
+import Cart from "@models/cart";
 import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
 import { getQuery, pages } from "src/helpers/query";
+import getDiscount from "src/helpers/price";
 
 const router = express.Router();
 
@@ -174,10 +176,25 @@ router.get("/api/items/:id", (async (req, res) => {
 }) as RequestHandler);
 
 router.put("/api/items/:id", upload.any(), (async (req, res) => {
+  const obj = req.body;
   try {
     const item = await Item.findById(req.params.id);
     if (item === null) throw new Error();
-    const obj = req.body;
+    if (item.price !== obj.price || (item.discount !== obj.discount && obj.discount > 0)) {
+      const newPrice =
+        item.discount !== obj.discount && obj.discount > 0 ? getDiscount(obj.price, obj.discount) : obj.price;
+      const carts = await Cart.find({ "items.item": item._id });
+      await Promise.all(
+        carts.map(async cart => {
+          cart.items.forEach(cartItem => {
+            if (cartItem.item.toString() === item._id.toString()) {
+              cartItem.price = newPrice;
+            }
+          });
+          await cart.save();
+        })
+      );
+    }
     const images = req.files as Express.Multer.File[];
     if (images.length > 0) {
       const transformation = images.map(image => image.buffer);

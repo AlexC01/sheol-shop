@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import mongoose from "mongoose";
 import { type ItemInterface } from "@interfaces/item";
+import getDiscount from "src/helpers/price";
 
 const itemSchema = new mongoose.Schema(
   {
@@ -42,8 +43,7 @@ itemSchema.virtual("carts", {
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.totalStock = item.sizes.reduce((acc, curr) => acc + curr.stock, 0);
-  if (item.discount !== undefined && item.discount > 0)
-    item.discountPrice = item.price - (item.price * item.discount) / 100;
+  if (item.discount !== undefined && item.discount > 0) item.discountPrice = getDiscount(item.price, item.discount);
   else item.discountPrice = 0;
   next();
 });
