@@ -1,4 +1,4 @@
-import express, { type RequestHandler } from "express";
+import express from "express";
 import User from "@models/user";
 import auth from "@middleware/auth";
 import { USER_ROLES } from "@constants/roles";
@@ -8,7 +8,7 @@ const router = express.Router();
 
 const UserModel = User as any;
 
-router.get("/api/users", auth, (async (req, res) => {
+router.get("/api/users", auth, async (req, res) => {
   try {
     const { user } = req as TypedRequestUser;
     if (user.role === USER_ROLES.user) {
@@ -19,18 +19,18 @@ router.get("/api/users", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
-router.get("/api/users/me", auth, (async (req, res) => {
+router.get("/api/users/me", auth, async (req, res) => {
   try {
     const { user } = req as TypedRequestUser;
     return res.status(200).send(user);
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
-router.post("/api/users", (async (req, res) => {
+router.post("/api/users", async (req, res) => {
   try {
     const user = new UserModel(req.body);
     await user.save();
@@ -39,9 +39,9 @@ router.post("/api/users", (async (req, res) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
-router.post("/api/users/login", (async (req, res) => {
+router.post("/api/users/login", async (req, res) => {
   try {
     const user = await UserModel.findByCredentials(req.body.email, req.body.password);
     const token = await user.generateAuthToken();
@@ -49,6 +49,6 @@ router.post("/api/users/login", (async (req, res) => {
   } catch (err) {
     return res.status(400).send(err);
   }
-}) as RequestHandler);
+});
 
 export default router;

@@ -1,4 +1,4 @@
-import express, { type RequestHandler } from "express";
+import express from "express";
 import moongose from "mongoose";
 import Cart from "@models/cart";
 import auth from "@middleware/auth";
@@ -27,7 +27,7 @@ router.get("/api/cart", auth, async (req, res) => {
   }
 });
 
-router.post("/api/cart", auth, (async (req, res) => {
+router.post("/api/cart", auth, async (req, res) => {
   try {
     const { user, body } = req as TypedRequestBody<BodyCart>;
     const cart = await Cart.findOne({ user });
@@ -56,9 +56,9 @@ router.post("/api/cart", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.delete("/api/cart", auth, (async (req, res) => {
+router.delete("/api/cart", auth, async (req, res) => {
   try {
     const { user, body } = req as TypedRequestBody<BodyCart>;
     const cart = await Cart.findOne({ user });
@@ -70,9 +70,9 @@ router.delete("/api/cart", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.post("/api/cart/items/remove", auth, (async (req, res) => {
+router.post("/api/cart/items/remove", auth, async (req, res) => {
   try {
     const { user } = req as TypedRequestUser;
     const cart = await Cart.findOne({ user });
@@ -83,6 +83,6 @@ router.post("/api/cart/items/remove", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
 export default router;

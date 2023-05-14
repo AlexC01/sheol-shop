@@ -1,20 +1,20 @@
-import express, { type RequestHandler } from "express";
+import express from "express";
 import Category from "@models/category";
 
 const router = express.Router();
 
 const types = ["men", "women"];
 
-router.get("/api/categories", (async (_req, res) => {
+router.get("/api/categories", async (_req, res) => {
   try {
     const categories = await Category.find().populate("subcategories");
     res.send(categories);
   } catch (err) {
     res.status(500).send("Error while fetching categories");
   }
-}) as RequestHandler);
+});
 
-router.get("/api/categories/:id", (async (req, res) => {
+router.get("/api/categories/:id", async (req, res) => {
   try {
     const category = await Category.findById(req.params.id).populate("subcategories");
     if (category === null) throw new Error();
@@ -22,9 +22,9 @@ router.get("/api/categories/:id", (async (req, res) => {
   } catch (err) {
     return res.status(404).send();
   }
-}) as RequestHandler);
+});
 
-router.post("/api/categories", (async (req, res) => {
+router.post("/api/categories", async (req, res) => {
   try {
     if (!types.includes(req.body.type)) {
       return res.status(400).send({ error: "Invalid category type, should be `men` or `women`" });
@@ -35,9 +35,9 @@ router.post("/api/categories", (async (req, res) => {
   } catch (err) {
     return res.status(400).send(err);
   }
-}) as RequestHandler);
+});
 
-router.delete("/api/categories/:id", (async (req, res) => {
+router.delete("/api/categories/:id", async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete({ _id: req.params.id });
     if (category === null) return res.status(404).send();
@@ -45,6 +45,6 @@ router.delete("/api/categories/:id", (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
 export default router;

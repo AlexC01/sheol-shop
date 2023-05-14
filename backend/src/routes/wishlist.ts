@@ -1,11 +1,11 @@
-import express, { type RequestHandler } from "express";
+import express from "express";
 import Wishlist from "@models/wishlist";
 import auth from "@middleware/auth";
 import { TypedRequestUser } from "@interfaces/express-int";
 
 const router = express.Router();
 
-router.get("/api/wishlist", auth, (async (req, res) => {
+router.get("/api/wishlist", auth, async (req, res) => {
   const { user } = req as TypedRequestUser;
   try {
     const wishlists = await Wishlist.find({ user }).populate("items.item").populate("items.size");
@@ -14,10 +14,10 @@ router.get("/api/wishlist", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
-router.get("/api/wishlist/:id", auth, (async (req, res) => {
-  const { user } = req as TypedRequestUser;
+router.get("/api/wishlist/:id", auth, async (req, res) => {
+  const { user } = req as unknown as TypedRequestUser;
   const { id } = req.params;
   try {
     const wishlist = await Wishlist.findOne({ _id: id, user }).populate("items.item").populate("items.size");
@@ -26,9 +26,9 @@ router.get("/api/wishlist/:id", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
-router.post("/api/wishlist", auth, (async (req, res) => {
+router.post("/api/wishlist", auth, async (req, res) => {
   const { user, body } = req as TypedRequestUser;
   const { name } = body;
   try {
@@ -40,10 +40,10 @@ router.post("/api/wishlist", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.post("/api/wishlist/:id/item", auth, (async (req, res) => {
-  const { body, user } = req as TypedRequestUser;
+router.post("/api/wishlist/:id/item", auth, async (req, res) => {
+  const { body, user } = req as unknown as TypedRequestUser;
   const { id } = req.params;
   const { item, size } = body;
   try {
@@ -60,10 +60,10 @@ router.post("/api/wishlist/:id/item", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.post("/api/wishlist/:id/item/remove/:itemId", auth, (async (req, res) => {
-  const { user } = req as TypedRequestUser;
+router.post("/api/wishlist/:id/item/remove/:itemId", auth, async (req, res) => {
+  const { user } = req as unknown as TypedRequestUser;
   const { id, itemId } = req.params;
 
   try {
@@ -76,10 +76,10 @@ router.post("/api/wishlist/:id/item/remove/:itemId", auth, (async (req, res) => 
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.patch("/api/wishlist/:id", auth, (async (req, res) => {
-  const { body, user } = req as TypedRequestUser;
+router.patch("/api/wishlist/:id", auth, async (req, res) => {
+  const { body, user } = req as unknown as TypedRequestUser;
   const { id } = req.params;
   const { name } = body;
   try {
@@ -91,10 +91,10 @@ router.patch("/api/wishlist/:id", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
-router.delete("/api/wishlist/:id", auth, (async (req, res) => {
-  const { user } = req as TypedRequestUser;
+router.delete("/api/wishlist/:id", auth, async (req, res) => {
+  const { user } = req as unknown as TypedRequestUser;
   const { id } = req.params;
   try {
     const wishlist = await Wishlist.findOneAndDelete({ _id: id, user });
@@ -103,6 +103,6 @@ router.delete("/api/wishlist/:id", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
 export default router;

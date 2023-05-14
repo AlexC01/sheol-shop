@@ -1,4 +1,4 @@
-import express, { type RequestHandler } from "express";
+import express from "express";
 import Review from "@models/review";
 import Item from "@models/item";
 import auth from "@middleware/auth";
@@ -6,25 +6,25 @@ import { TypedRequestUser } from "@interfaces/express-int";
 
 const router = express.Router();
 
-router.get("/api/reviews", (async (_req, res) => {
+router.get("/api/reviews", async (_req, res) => {
   try {
     const reviews = await Review.find();
     res.send(reviews);
   } catch (err) {
     res.status(500).send("Error while fetching reviews");
   }
-}) as RequestHandler);
+});
 
-router.get("/api/items/:item/reviews", (async (req, res) => {
+router.get("/api/items/:item/reviews", async (req, res) => {
   try {
     const reviews = await Review.find({ item: req.params.item }).populate("user");
     return res.send(reviews !== null ? reviews : []);
   } catch (err) {
     return res.status(500).send("Error while fetching reviews");
   }
-}) as RequestHandler);
+});
 
-router.post("/api/reviews", auth, (async (req, res) => {
+router.post("/api/reviews", auth, async (req, res) => {
   try {
     const { item: itemId, rating } = req.body;
     const item = await Item.findById(itemId);
@@ -42,6 +42,6 @@ router.post("/api/reviews", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-}) as RequestHandler);
+});
 
 export default router;
