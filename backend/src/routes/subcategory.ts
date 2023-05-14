@@ -1,5 +1,6 @@
 import express from "express";
 import SubCategory from "@models/subcategory";
+import upload from "@helpers/multer";
 
 const router = express.Router();
 
@@ -24,8 +25,10 @@ router.get("/api/subcategories/:id", async (req, res) => {
   }
 });
 
-router.post("/api/subcategories", async (req, res) => {
+router.post("/api/subcategories", upload.single("image"), async (req, res) => {
+  const image = req.file as Express.Multer.File;
   try {
+    req.body.image = image.buffer;
     const subcategory = new SubCategory(req.body);
     await subcategory.save();
     return res.status(201).send(subcategory);

@@ -1,5 +1,6 @@
 import express from "express";
 import Category from "@models/category";
+import upload from "@helpers/multer";
 
 const router = express.Router();
 
@@ -24,11 +25,13 @@ router.get("/api/categories/:id", async (req, res) => {
   }
 });
 
-router.post("/api/categories", async (req, res) => {
+router.post("/api/categories", upload.single("image"), async (req, res) => {
   try {
     if (!types.includes(req.body.type)) {
       return res.status(400).send({ error: "Invalid category type, should be `men` or `women`" });
     }
+    const image = req.file as Express.Multer.File;
+    req.body.image = image.buffer;
     const category = new Category(req.body);
     await category.save();
     return res.status(201).send(category);
