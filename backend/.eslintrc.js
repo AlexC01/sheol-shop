@@ -22,7 +22,8 @@ module.exports = {
     "prettier/prettier": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
-    "@typescript-eslint/no-misused-promises": "off"
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/consistent-type-imports": "off"
   },
   globals: { process: true, __dirname: true }
 };
