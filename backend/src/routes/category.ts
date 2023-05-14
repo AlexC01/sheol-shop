@@ -4,8 +4,6 @@ import upload from "@helpers/multer";
 
 const router = express.Router();
 
-const types = ["men", "women"];
-
 router.get("/api/categories", async (_req, res) => {
   try {
     const categories = await Category.find().populate("subcategories");
@@ -27,9 +25,6 @@ router.get("/api/categories/:id", async (req, res) => {
 
 router.post("/api/categories", upload.single("image"), async (req, res) => {
   try {
-    if (!types.includes(req.body.type)) {
-      return res.status(400).send({ error: "Invalid category type, should be `men` or `women`" });
-    }
     const image = req.file as Express.Multer.File;
     req.body.image = image.buffer;
     const category = new Category(req.body);
@@ -43,9 +38,6 @@ router.post("/api/categories", upload.single("image"), async (req, res) => {
 router.patch("/api/categories/:id", upload.single("image"), async (req, res) => {
   const updates = req.body;
   try {
-    if (!types.includes(req.body.type)) {
-      return res.status(400).send({ error: "Invalid category type, should be `men` or `women`" });
-    }
     const image = req.file as Express.Multer.File;
     updates.image = image.buffer;
     const category = await Category.findOne({ _id: req.params.id });
