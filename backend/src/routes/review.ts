@@ -2,6 +2,7 @@ import express, { type RequestHandler } from "express";
 import Review from "@models/review";
 import Item from "@models/item";
 import auth from "@middleware/auth";
+import { TypedRequestUser } from "@interfaces/express-int";
 
 const router = express.Router();
 
@@ -32,7 +33,7 @@ router.post("/api/reviews", auth, (async (req, res) => {
     const total = reviews.length === 0 ? 0 : reviews.reduce((acc, curr) => acc + curr.rating, 0);
     item.rate = parseFloat(((total + rating) / (reviews.length + 1)).toFixed(2));
     item.totalReviews = reviews.length + 1;
-    const { user } = req as any;
+    const { user } = req as TypedRequestUser;
     req.body.user = user._id;
     const review = new Review(req.body);
     await item.save();

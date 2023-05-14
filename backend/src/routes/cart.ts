@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-base-to-string */
 import express, { type RequestHandler } from "express";
+import moongose from "mongoose";
 import Cart from "@models/cart";
 import auth from "@middleware/auth";
+import { BodyCart, TypedRequestBody, TypedRequestUser } from "@interfaces/express-int";
 
 const router = express.Router();
 
-router.get("/api/cart", auth, (async (req, res) => {
+router.get("/api/cart", auth, async (req, res) => {
   try {
-    const { user } = req as any;
+    const { user } = req as TypedRequestUser;
     const cart = await Cart.findOne({ user }).populate("items.item").populate("items.size");
     if (cart === null) {
       const body = {
@@ -25,18 +25,23 @@ router.get("/api/cart", auth, (async (req, res) => {
   } catch (err) {
     return res.status(500).send();
   }
-}) as RequestHandler);
+});
 
 router.post("/api/cart", auth, (async (req, res) => {
   try {
-    const { user, body } = req as any;
+    const { user, body } = req as TypedRequestBody<BodyCart>;
     const cart = await Cart.findOne({ user });
     if (cart === null) return res.status(404).send();
     const findProduct = cart.items.findIndex(
       itemOld => itemOld.item.toString() === body.item && itemOld.size.toString() === body.size
     );
     if (findProduct === -1) {
-      cart.items.push({ item: body.item, size: body.size, quantity: 1, price: body.price });
+      cart.items.push({
+        item: new moongose.Types.ObjectId(body.item),
+        size: new moongose.Types.ObjectId(body.size),
+        quantity: 1,
+        price: body.price
+      });
     } else {
       cart.items[findProduct].price = body.price;
       const quant = body.type === "add" ? cart.items[findProduct].quantity + 1 : cart.items[findProduct].quantity - 1;
@@ -55,7 +60,7 @@ router.post("/api/cart", auth, (async (req, res) => {
 
 router.delete("/api/cart", auth, (async (req, res) => {
   try {
-    const { user, body } = req as any;
+    const { user, body } = req as TypedRequestBody<BodyCart>;
     const cart = await Cart.findOne({ user });
     if (cart === null) return res.status(404).send();
     const newProducts = cart.items.filter(itemOld => itemOld.item.toString() !== body.item);
@@ -69,7 +74,7 @@ router.delete("/api/cart", auth, (async (req, res) => {
 
 router.post("/api/cart/items/remove", auth, (async (req, res) => {
   try {
-    const { user } = req as any;
+    const { user } = req as TypedRequestUser;
     const cart = await Cart.findOne({ user });
     if (cart === null) return res.status(404).send();
     cart.items = [];

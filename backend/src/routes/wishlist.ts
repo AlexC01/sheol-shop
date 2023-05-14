@@ -1,11 +1,12 @@
 import express, { type RequestHandler } from "express";
 import Wishlist from "@models/wishlist";
 import auth from "@middleware/auth";
+import { TypedRequestUser } from "@interfaces/express-int";
 
 const router = express.Router();
 
 router.get("/api/wishlist", auth, (async (req, res) => {
-  const { user } = req as any;
+  const { user } = req as TypedRequestUser;
   try {
     const wishlists = await Wishlist.find({ user }).populate("items.item").populate("items.size");
     if (wishlists === null) return res.status(404).send();
@@ -16,7 +17,7 @@ router.get("/api/wishlist", auth, (async (req, res) => {
 }) as RequestHandler);
 
 router.get("/api/wishlist/:id", auth, (async (req, res) => {
-  const { user } = req as any;
+  const { user } = req as TypedRequestUser;
   const { id } = req.params;
   try {
     const wishlist = await Wishlist.findOne({ _id: id, user }).populate("items.item").populate("items.size");
@@ -28,7 +29,7 @@ router.get("/api/wishlist/:id", auth, (async (req, res) => {
 }) as RequestHandler);
 
 router.post("/api/wishlist", auth, (async (req, res) => {
-  const { user, body } = req as any;
+  const { user, body } = req as TypedRequestUser;
   const { name } = body;
   try {
     const wishlists = await Wishlist.findOne({ user, name });
@@ -42,7 +43,7 @@ router.post("/api/wishlist", auth, (async (req, res) => {
 }) as RequestHandler);
 
 router.post("/api/wishlist/:id/item", auth, (async (req, res) => {
-  const { body, user } = req as any;
+  const { body, user } = req as TypedRequestUser;
   const { id } = req.params;
   const { item, size } = body;
   try {
@@ -62,7 +63,7 @@ router.post("/api/wishlist/:id/item", auth, (async (req, res) => {
 }) as RequestHandler);
 
 router.post("/api/wishlist/:id/item/remove/:itemId", auth, (async (req, res) => {
-  const { user } = req as any;
+  const { user } = req as TypedRequestUser;
   const { id, itemId } = req.params;
 
   try {
@@ -78,7 +79,7 @@ router.post("/api/wishlist/:id/item/remove/:itemId", auth, (async (req, res) => 
 }) as RequestHandler);
 
 router.patch("/api/wishlist/:id", auth, (async (req, res) => {
-  const { body, user } = req as any;
+  const { body, user } = req as TypedRequestUser;
   const { id } = req.params;
   const { name } = body;
   try {
@@ -93,7 +94,7 @@ router.patch("/api/wishlist/:id", auth, (async (req, res) => {
 }) as RequestHandler);
 
 router.delete("/api/wishlist/:id", auth, (async (req, res) => {
-  const { user } = req as any;
+  const { user } = req as TypedRequestUser;
   const { id } = req.params;
   try {
     const wishlist = await Wishlist.findOneAndDelete({ _id: id, user });
