@@ -12,6 +12,7 @@ import cartRouter from "@routes/cart";
 import brandRouter from "@routes/brand";
 import wishlistRouter from "@routes/wishlist";
 import addressRouter from "@routes/address";
+import orderRouter from "@routes/order";
 import path from "path";
 
 void connectMongo();
@@ -33,7 +34,8 @@ app.use([
   cartRouter,
   brandRouter,
   wishlistRouter,
-  addressRouter
+  addressRouter,
+  orderRouter
 ]);
 
 app.listen(PORT, () => {

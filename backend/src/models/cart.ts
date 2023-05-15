@@ -16,7 +16,7 @@ const cartSchema = new mongoose.Schema(
       }
     ],
     totalItems: { type: Number, required: false, default: 0 },
-    total: { type: Number, required: false, default: 0 }
+    total: { type: Number, required: true, default: 0 }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );
@@ -40,7 +40,7 @@ cartSchema.pre("save", async function (next) {
     });
     cart.items = newItems;
   }
-  cart.total = cart.items.reduce((acc, curr) => acc + curr.totalPrice, 0);
+  cart.total = cart.items.filter(item => item.outOfStock === false).reduce((acc, curr) => acc + curr.totalPrice, 0);
   next();
 });
 

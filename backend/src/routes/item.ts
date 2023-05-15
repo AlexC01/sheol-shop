@@ -5,7 +5,6 @@ import Cart from "@models/cart";
 import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
 import { getQuery, pages } from "@helpers/query";
-import getDiscount from "@helpers/price";
 import { imagePaths } from "@helpers/paths";
 import fs from "fs";
 import sharp from "sharp";
@@ -188,21 +187,7 @@ router.patch("/api/items/:id", upload.array("images"), async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (item === null) return res.status(404).send();
-    if (item.price !== obj.price || (item.discount !== obj.discount && obj.discount > 0)) {
-      const newPrice =
-        item.discount !== obj.discount && obj.discount > 0 ? getDiscount(obj.price, obj.discount) : obj.price;
-      const carts = await Cart.find({ "items.item": item._id });
-      await Promise.all(
-        carts.map(async cart => {
-          cart.items.forEach(cartItem => {
-            if (cartItem.item.toString() === item._id.toString()) {
-              cartItem.price = newPrice;
-            }
-          });
-          await cart.save();
-        })
-      );
-    }
+
     if (images.length > 0) {
       obj.images = await Promise.all(
         images.map(async image => {
@@ -221,6 +206,14 @@ router.patch("/api/items/:id", upload.array("images"), async (req, res) => {
     }
     item.set(obj);
     await item.save();
+    if (obj.price !== undefined || obj.discount !== undefined || obj.sizes !== undefined) {
+      const carts = await Cart.find({ "items.item": item._id });
+      await Promise.all(
+        carts.map(async cart => {
+          await cart.save();
+        })
+      );
+    }
     return res.send(item);
   } catch (err) {
     return res.status(404).send();
