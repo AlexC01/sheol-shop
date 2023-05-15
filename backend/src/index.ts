@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
 import connectMongo from "@db/mongoose";
 import categoryRouter from "@routes/category";
@@ -13,7 +14,7 @@ import brandRouter from "@routes/brand";
 import wishlistRouter from "@routes/wishlist";
 import addressRouter from "@routes/address";
 import orderRouter from "@routes/order";
-import path from "path";
+import couponRouter from "@routes/coupon";
 
 void connectMongo();
 
@@ -35,7 +36,8 @@ app.use([
   brandRouter,
   wishlistRouter,
   addressRouter,
-  orderRouter
+  orderRouter,
+  couponRouter
 ]);
 
 app.listen(PORT, () => {
