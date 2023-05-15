@@ -1,6 +1,11 @@
 import express from "express";
 import Category from "@models/category";
-import upload from "@helpers/multer";
+import upload from "@middleware/multer";
+import sharp from "sharp";
+import path from "path";
+import fs from "fs";
+import { IMAGES_RESOLUTIONS } from "@constants/resolutions";
+import { imagePaths } from "@helpers/paths";
 
 const router = express.Router();
 
@@ -24,11 +29,21 @@ router.get("/api/categories/:id", async (req, res) => {
 });
 
 router.post("/api/categories", upload.single("image"), async (req, res) => {
+  const { path: pathFile, filename } = req.file as Express.Multer.File;
+
   try {
-    const image = req.file as Express.Multer.File;
-    req.body.image = image.buffer;
+    const { imagePath, toFilePath } = imagePaths(filename);
+
+    await sharp(pathFile)
+      .resize(IMAGES_RESOLUTIONS.hero.width, IMAGES_RESOLUTIONS.hero.height)
+      .webp()
+      .toFile(toFilePath);
+    fs.unlinkSync(pathFile);
+    req.body.image = imagePath;
+
     const category = new Category(req.body);
     await category.save();
+
     return res.status(201).send(category);
   } catch (err) {
     return res.status(400).send(err);
