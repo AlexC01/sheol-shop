@@ -26,7 +26,7 @@ cartSchema.pre("save", async function (next) {
   await newCart.populate("items.item");
   await newCart.populate("items.size");
   const cart: CartInterface = newCart;
-  cart.totalItems = cart.items.length;
+  cart.totalItems = cart.items.filter(item => item.outOfStock === false).length;
   if (cart.items.length > 0) {
     const newItems = cart.items.map(itemOld => {
       itemOld.price =
