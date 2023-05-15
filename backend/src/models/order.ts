@@ -16,6 +16,7 @@ const orderSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     status: { type: String, required: true, default: "pending", enum: ["pending", "shipped", "delivered"] },
     totalItems: { type: Number, required: true, default: 0 },
+    couponDiscount: { type: Number, required: true, default: 0 },
     total: { type: Number, required: true, default: 0 },
     shipping: { type: Number, required: true, default: 0 },
     iva: { type: Number, required: true, default: 0 },

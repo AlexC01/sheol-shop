@@ -43,7 +43,8 @@ itemSchema.virtual("carts", {
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.totalStock = item.sizes.reduce((acc, curr) => acc + curr.stock, 0);
-  if (item.discount !== undefined && item.discount > 0) item.discountPrice = getDiscount(item.price, item.discount);
+  if (item.discount !== undefined && item.discount > 0)
+    item.discountPrice = parseFloat(getDiscount(item.price, item.discount).toFixed(2));
   else item.discountPrice = 0;
   next();
 });
