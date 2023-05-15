@@ -11,6 +11,7 @@ import userRouter from "@routes/user";
 import cartRouter from "@routes/cart";
 import brandRouter from "@routes/brand";
 import wishlistRouter from "@routes/wishlist";
+import path from "path";
 
 void connectMongo();
 
@@ -18,6 +19,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use([
   categoryRouter,
