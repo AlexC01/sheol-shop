@@ -1,5 +1,6 @@
 import express from "express";
 import Order from "@models/order";
+import Coupon from "@models/coupon";
 import Cart from "@models/cart";
 import auth from "@middleware/auth";
 import { TypedRequestUser } from "@interfaces/express-int";
@@ -67,10 +68,23 @@ router.post("/api/orders", auth, async (req, res) => {
     if (outOfStockItems.length > 0) return res.status(401).send({ msg: "There are items out of stock" });
 
     let finalPrice = cart.total;
+    let couponDiscount = 0;
+    let freeShipping = false;
 
-    if (cart.total < 50) finalPrice += 10;
+    if (body.coupon !== undefined) {
+      const coupon = await Coupon.findOne({ code: body.coupon });
+      if (coupon === null || !coupon.isActive) return res.status(401).send({ msg: "Invalid coupon" });
+      couponDiscount = parseFloat((finalPrice * (coupon.discount / 100)).toFixed(2));
+      finalPrice -= couponDiscount;
+      coupon.uses += 1;
+      if (coupon.uses + 1 > coupon.maxUses) coupon.isActive = false;
+      await coupon.save();
+    }
 
-    const IVA = finalPrice * 0.15;
+    if (finalPrice < 50) finalPrice += 10;
+    else freeShipping = true;
+
+    const IVA = parseFloat((finalPrice * 0.15).toFixed(2));
 
     finalPrice = IVA + finalPrice;
 
@@ -81,9 +95,10 @@ router.post("/api/orders", auth, async (req, res) => {
       status: "pending",
       total: cart.total,
       iva: IVA,
+      couponDiscount,
       totalIVA: finalPrice,
-      freeShipping: cart.total > 50,
-      shipping: cart.total < 50 ? 10 : 0,
+      freeShipping,
+      shipping: freeShipping ? 0 : 10,
       totalItems: cartItems.length,
       orderId: `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`
     };

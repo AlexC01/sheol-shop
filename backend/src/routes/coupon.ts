@@ -43,6 +43,11 @@ router.patch("/api/coupons/:code", auth, async (req, res) => {
   try {
     const coupon = await Coupon.findOne({ code: req.params.code });
     if (coupon === null) return res.status(404).send();
+    if (req.body.maxUses !== undefined) {
+      if (req.body.maxUses < coupon.uses)
+        return res.status(400).send({ msg: "The max uses can't be less than the current uses" });
+      req.body.isActive = req.body.maxUses > coupon.uses;
+    }
     coupon.set(req.body);
     await coupon.save();
     return res.status(202).send(coupon);
