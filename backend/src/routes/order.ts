@@ -2,6 +2,7 @@ import express from "express";
 import Order from "@models/order";
 import Coupon from "@models/coupon";
 import Cart from "@models/cart";
+import Item from "@models/item";
 import auth from "@middleware/auth";
 import { TypedRequestUser } from "@interfaces/express-int";
 
@@ -66,6 +67,19 @@ router.post("/api/orders", auth, async (req, res) => {
     });
 
     if (outOfStockItems.length > 0) return res.status(401).send({ msg: "There are items out of stock" });
+
+    await Promise.all(
+      cartItems.map(async (itemOld: any) => {
+        const item = await Item.findById(itemOld.item._id);
+        if (item === null) return;
+        const findProduct = item.sizes.findIndex(
+          (sizeOld: any) => sizeOld.size._id.toString() === itemOld.size._id.toString()
+        );
+        if (findProduct === -1) return;
+        item.sizes[findProduct].stock -= itemOld.quantity;
+        await item.save();
+      })
+    );
 
     let finalPrice = cart.total;
     let couponDiscount = 0;
