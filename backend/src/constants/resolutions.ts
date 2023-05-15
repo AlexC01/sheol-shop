@@ -3,6 +3,10 @@ export const IMAGES_RESOLUTIONS = {
     width: 1280,
     height: 720
   },
+  sections: {
+    width: 850,
+    height: 850
+  },
   avatar: {
     width: 200,
     height: 200

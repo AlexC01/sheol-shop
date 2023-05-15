@@ -1,6 +1,10 @@
 import express from "express";
 import SubCategory from "@models/subcategory";
 import upload from "@middleware/multer";
+import { imagePaths } from "@helpers/paths";
+import sharp from "sharp";
+import fs from "fs";
+import { IMAGES_RESOLUTIONS } from "@constants/resolutions";
 
 const router = express.Router();
 
@@ -26,9 +30,16 @@ router.get("/api/subcategories/:id", async (req, res) => {
 });
 
 router.post("/api/subcategories", upload.single("image"), async (req, res) => {
-  const image = req.file as Express.Multer.File;
+  const { file } = req;
   try {
-    req.body.image = image.buffer;
+    if (file === undefined) throw new Error("Image is required");
+    const { imagePath, toFilePath } = imagePaths(file.filename);
+    await sharp(file.path)
+      .resize(IMAGES_RESOLUTIONS.sections.width, IMAGES_RESOLUTIONS.sections.height)
+      .webp()
+      .toFile(toFilePath);
+    fs.unlinkSync(file.path);
+    req.body.image = imagePath;
     const subcategory = new SubCategory(req.body);
     await subcategory.save();
     return res.status(201).send(subcategory);
@@ -37,13 +48,23 @@ router.post("/api/subcategories", upload.single("image"), async (req, res) => {
   }
 });
 
-router.put("/api/subcategories/:id", upload.single("image"), async (req, res) => {
+router.patch("/api/subcategories/:id", upload.single("image"), async (req, res) => {
   const updates = req.body;
+  const { file } = req;
   try {
-    const image = req.file as Express.Multer.File;
-    updates.image = image.buffer;
-    const subcategory = await SubCategory.findByIdAndUpdate(req.params.id, updates, { new: true });
+    if (file !== undefined) {
+      const { imagePath, toFilePath } = imagePaths(file.filename);
+      await sharp(file.path)
+        .resize(IMAGES_RESOLUTIONS.sections.width, IMAGES_RESOLUTIONS.sections.height)
+        .webp()
+        .toFile(toFilePath);
+      fs.unlinkSync(file.path);
+      updates.image = imagePath;
+    }
+    const subcategory = await SubCategory.findOne({ _id: req.params.id });
     if (subcategory === null) return res.status(404).send();
+    subcategory.set(updates);
+    await subcategory.save();
     return res.status(202).send(subcategory);
   } catch (err) {
     return res.status(400).send(err);
