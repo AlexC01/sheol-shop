@@ -66,7 +66,7 @@ router.patch("/api/categories/:id", upload.single("image"), async (req, res) => 
     if (category === null) return res.status(404).send();
     category.set(updates);
     await category.save();
-    return res.send(category);
+    return res.status(202).send(category);
   } catch (err) {
     return res.status(400).send(err);
   }
@@ -76,7 +76,7 @@ router.delete("/api/categories/:id", async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete({ _id: req.params.id });
     if (category === null) return res.status(404).send();
-    return res.send(category);
+    return res.status(202).send(category);
   } catch (err) {
     return res.status(500).send();
   }

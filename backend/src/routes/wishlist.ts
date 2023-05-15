@@ -9,7 +9,6 @@ router.get("/api/wishlist", auth, async (req, res) => {
   const { user } = req as TypedRequestUser;
   try {
     const wishlists = await Wishlist.find({ user }).populate("items.item").populate("items.size");
-    if (wishlists === null) return res.status(404).send();
     return res.status(200).send(wishlists);
   } catch (err) {
     return res.status(500).send(err);
