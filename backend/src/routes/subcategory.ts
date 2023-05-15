@@ -1,6 +1,6 @@
 import express from "express";
 import SubCategory from "@models/subcategory";
-import upload from "@helpers/multer";
+import upload from "@middleware/multer";
 
 const router = express.Router();
 

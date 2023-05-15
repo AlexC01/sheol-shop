@@ -1,5 +1,5 @@
 import express, { type RequestHandler } from "express";
-import upload from "@helpers/multer";
+import upload from "@middleware/multer";
 import Item from "@models/item";
 import Cart from "@models/cart";
 import SubCategories from "@models/subcategory";
