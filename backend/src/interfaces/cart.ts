@@ -7,6 +7,7 @@ interface CartItems {
   size: Types.ObjectId;
   outOfStock?: boolean;
   quantity: number;
+  totalPrice: number;
   price: number;
 }
 

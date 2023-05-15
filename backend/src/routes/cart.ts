@@ -1,5 +1,4 @@
 import express from "express";
-import moongose from "mongoose";
 import Cart from "@models/cart";
 import auth from "@middleware/auth";
 import { BodyCart, TypedRequestBody, TypedRequestUser } from "@interfaces/express-int";
@@ -29,21 +28,15 @@ router.get("/api/cart", auth, async (req, res) => {
 
 router.post("/api/cart", auth, async (req, res) => {
   try {
-    const { user, body } = req as TypedRequestBody<BodyCart>;
+    const { user, body } = req as TypedRequestUser;
     const cart = await Cart.findOne({ user });
     if (cart === null) return res.status(404).send();
     const findProduct = cart.items.findIndex(
       itemOld => itemOld.item.toString() === body.item && itemOld.size.toString() === body.size
     );
     if (findProduct === -1) {
-      cart.items.push({
-        item: new moongose.Types.ObjectId(body.item),
-        size: new moongose.Types.ObjectId(body.size),
-        quantity: 1,
-        price: body.price
-      });
+      cart.items.push(body);
     } else {
-      cart.items[findProduct].price = body.price;
       const quant = body.type === "add" ? cart.items[findProduct].quantity + 1 : cart.items[findProduct].quantity - 1;
       if (quant === 0) {
         cart.items.splice(findProduct, 1);
