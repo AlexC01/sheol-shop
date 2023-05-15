@@ -2,7 +2,6 @@ import express from "express";
 import Category from "@models/category";
 import upload from "@middleware/multer";
 import sharp from "sharp";
-import path from "path";
 import fs from "fs";
 import { IMAGES_RESOLUTIONS } from "@constants/resolutions";
 import { imagePaths } from "@helpers/paths";
