@@ -12,7 +12,7 @@ const itemSchema = new mongoose.Schema(
     subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory", required: true },
     color: { type: mongoose.Schema.Types.ObjectId, ref: "Color", required: true },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
-    images: [{ type: Buffer, required: true }],
+    images: [{ type: String, required: true }],
     sizes: [
       {
         size: { type: mongoose.Schema.Types.ObjectId, ref: "Size", required: true },

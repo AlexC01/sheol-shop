@@ -9,6 +9,7 @@ import { USER_ROLES } from "@constants/roles";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
+    username: { type: String, required: true, trim: true, unique: true },
     email: {
       type: String,
       required: true,
@@ -33,8 +34,8 @@ const userSchema = new mongoose.Schema(
       }
     },
     tokens: [{ token: { type: String, required: true } }],
-    role: { type: String, required: false, default: USER_ROLES.user },
-    avatar: { type: Buffer, required: false }
+    role: { type: String, required: false, enum: ["admin", "user"], default: USER_ROLES.user },
+    avatar: { type: String, required: false }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );
