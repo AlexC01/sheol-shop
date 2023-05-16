@@ -4,7 +4,7 @@ import { BiSearch } from "react-icons/bi";
 
 const Search = () => {
   return (
-    <div className="relative hidden md:block">
+    <div className="relative ">
       <input
         type="text"
         className="border-[1px] w-full placeholder-gray-400 md:w-auto py-2 px-8 rounded-full shadow-sm hover:shadow-md transition focus:shadow-md outline-none"
