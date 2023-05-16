@@ -4,13 +4,13 @@ import { BiSearch } from "react-icons/bi";
 
 const Search = () => {
   return (
-    <div className="relative">
+    <div className="relative hidden md:block">
       <input
         type="text"
-        className="border-[1px] w-full placeholder-gray-400 md:w-auto py-2 px-5 rounded-full shadow-sm hover:shadow-md transition focus:z-10 focus:shadow-md outline-none "
+        className="border-[1px] w-full placeholder-gray-400 md:w-auto py-2 px-8 rounded-full shadow-sm hover:shadow-md transition focus:shadow-md outline-none"
         placeholder="Black Shirt..."
       />
-      <div className="absolute inset-y-0.5 inset-x-52 rounded-r-lg  py-2">
+      <div className="absolute inset-y-0.5 left-2 rounded-r-lg py-2">
         <BiSearch size={22} />
       </div>
     </div>
