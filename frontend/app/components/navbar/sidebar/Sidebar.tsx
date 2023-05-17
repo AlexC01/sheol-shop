@@ -8,8 +8,11 @@ import CategoryDetail from "./CategoryDetail";
 const Sidebar = () => {
   const [active, setActive] = useState("women");
   const [openCategory, setOpenCategory] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
 
   const toggleCategoryOpen = () => setOpenCategory(!openCategory);
+
+  const changeCategory = (name: string) => setCategoryName(name);
 
   return (
     <div className="relative w-screen max-w-md h-full overflow-y-auto overflow-x-hidden">
@@ -44,7 +47,7 @@ const Sidebar = () => {
           />
         </div>
         <div className="mt-2">
-          <Rows label="Sale" toggleOpenCategory={toggleCategoryOpen} />
+          <Rows label="Sale" toggleOpenCategory={toggleCategoryOpen} changeCategory={changeCategory} />
         </div>
       </div>
       <div
@@ -52,7 +55,7 @@ const Sidebar = () => {
           openCategory ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <CategoryDetail toggleCategoryOpen={toggleCategoryOpen} />
+        <CategoryDetail toggleCategoryOpen={toggleCategoryOpen} name={categoryName} />
       </div>
     </div>
   );
