@@ -8,6 +8,7 @@ import Options from "./Options";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
 import Drawer from "../drawer/Drawer";
+import Sidebar from "./sidebar/Sidebar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,9 @@ const Navbar = () => {
 
   return (
     <div className="relative">
-      <Drawer isOpen={isOpen} toggleOpen={toggleOpen} />
+      <Drawer isOpen={isOpen} toggleOpen={toggleOpen}>
+        <Sidebar isOpen={isOpen} />
+      </Drawer>
       <nav className="fixed w-full bg-white z-10 shadow-sm">
         <div className="h-36 md:h-20 border-b-[1px]">
           <Container>

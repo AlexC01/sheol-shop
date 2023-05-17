@@ -17,11 +17,11 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, toggleOpen, children }) => {
       )}
       <div
         onClick={e => e.stopPropagation()}
-        className={`left-0 absolute z-50 w-screen max-w-lg border-[1px] bg-white h-screen shadow-xl duration-300 ease-in-out transition-all transform ${
+        className={`left-0 absolute z-50  w-screen max-w-md border-[1px] bg-white h-screen shadow-xl duration-300 ease-in-out transition-all transform ${
           isOpen ? "-translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="relative w-screen max-w-lg h-full overflow-y-scoll">{children}</div>
+        <div className="relative w-screen max-w-md h-full overflow-y-auto overflow-x-hidden">{children}</div>
       </div>
     </main>
   );
