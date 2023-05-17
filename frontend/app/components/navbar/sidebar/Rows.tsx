@@ -4,11 +4,12 @@ import CategoryImage from "./CategoryImage";
 
 interface RowsProps {
   label: string;
+  toggleOpenCategory: () => void;
 }
 
-const Rows: React.FC<RowsProps> = ({ label }) => {
+const Rows: React.FC<RowsProps> = ({ label, toggleOpenCategory }) => {
   return (
-    <div className="flex items-center justify-between px-6 py-3 cursor-pointer">
+    <div onClick={toggleOpenCategory} className="flex items-center justify-between px-6 py-3 cursor-pointer">
       <div className="flex items-center gap-4">
         <CategoryImage />
         <p className="text-lg uppercase">{label}</p>

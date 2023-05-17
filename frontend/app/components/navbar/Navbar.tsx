@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <div className="relative">
       <Drawer isOpen={isOpen} toggleOpen={toggleOpen}>
-        <Sidebar isOpen={isOpen} />
+        <Sidebar />
       </Drawer>
       <nav className="fixed w-full bg-white z-10 shadow-sm">
         <div className="h-36 md:h-20 border-b-[1px]">
