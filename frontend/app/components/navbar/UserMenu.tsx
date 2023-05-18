@@ -6,13 +6,14 @@ import { BsCart2 } from "react-icons/bs";
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
 import Modal from "../modals/Modal";
+import useRegisterModal from "@/app/hooks/useRegisterModal";
 
 const UserMenu = () => {
+  const registerModal = useRegisterModal();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Modal isOpen title="Register Modal" actionLabel="Submit" />
       <div className="relative">
         <div className="flex flex-row flex-items-center gap-2">
           <div className="relative py-3 px-4 md:p-3 flex items-center border-[1px] border-neutral-200 rounded-full cursor-pointer hover:shadow-md transition">
@@ -37,7 +38,7 @@ const UserMenu = () => {
               <div className="flex flex-col cursor-pointer">
                 <>
                   <MenuItem onClick={() => {}} label="Login" />
-                  <MenuItem onClick={() => {}} label="Sign Up" />
+                  <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
                 </>
               </div>
             </div>
