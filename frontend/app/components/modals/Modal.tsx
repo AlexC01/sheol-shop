@@ -27,7 +27,8 @@ const Modal: React.FC<ModalProps> = ({
   body,
   actionLabel,
   secondaryAction,
-  secondaryLabel
+  secondaryLabel,
+  footer
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -74,6 +75,7 @@ const Modal: React.FC<ModalProps> = ({
               {secondaryAction && secondaryLabel && <Button label={secondaryLabel} onClick={secondaryAction} outline />}
               <Button label={actionLabel} onClick={handleSubmit} />
             </div>
+            {footer}
           </div>
         </div>
       </div>
