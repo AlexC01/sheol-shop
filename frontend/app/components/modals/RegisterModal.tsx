@@ -9,6 +9,8 @@ import Heading from "../Heading";
 import Input from "../inputs/Input";
 import { toast } from "react-hot-toast";
 import Button from "../Button";
+import { signUp } from "@/app/services/user";
+import { UserSignUp } from "@/app/models/User";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -20,17 +22,25 @@ const RegisterModal = () => {
     formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
+      username: "",
       name: "",
       email: "",
       password: ""
     }
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = data => {
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
     setIsLoading(true);
-
-    setIsLoading(false);
-    toast.error("Something went wrong!");
+    const body = { ...(data as UserSignUp) };
+    try {
+      const resp = await signUp(body);
+      toast.success("Account created successfully!");
+      registerModal.onClose();
+    } catch (err) {
+      toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const footerContent = (

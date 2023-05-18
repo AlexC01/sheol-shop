@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 class APIClient {
   client: AxiosInstance;
 
-  constructor(url: string = `${process.env.REACT_APP_API_BASE_URL}/api`) {
+  constructor(url: string = `${process.env.NEXT_PUBLIC_API_URL}/api`) {
     this.client = axios.create({ baseURL: url });
 
     this.client.interceptors.response.use(
