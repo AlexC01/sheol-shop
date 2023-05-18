@@ -88,6 +88,7 @@ router.post("/api/users/login", async (req, res) => {
     const user = await UserModel.findByCredentials(req.body.email, req.body.password);
     const session = req.session as any;
     session.userId = user._id;
+    session.save();
     const token = await user.generateAuthToken();
     return res.send({ user, token });
   } catch (err) {

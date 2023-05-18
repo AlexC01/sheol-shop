@@ -4,6 +4,7 @@ import Navbar from "./components/navbar/Navbar";
 import ToasterProvider from "./components/providers/ToasterProvider";
 import "./globals.css";
 import { Poppins } from "next/font/google";
+import getCurrentUser from "./actions/getCurrentUser";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -15,14 +16,15 @@ export const metadata = {
   description: "Sheol-Shop your clothes store"
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const currentUser = await getCurrentUser();
   return (
     <html lang="en">
       <body className={font.className}>
         <ToasterProvider />
         <RegisterModal />
         <LoginModal />
-        <Navbar />
+        <Navbar currentUser={currentUser} />
         {children}
       </body>
     </html>

@@ -1,4 +1,4 @@
-import { UserLogIn, UserSignUp } from "../models/User";
+import { User, UserLogIn, UserSignUp } from "../models/User";
 import APIClient from "./APIClient";
 
 export const signUp = async (body: UserSignUp) => {
@@ -9,6 +9,15 @@ export const signUp = async (body: UserSignUp) => {
 
 export const logIn = async (body: UserLogIn) => {
   const clientAPI = new APIClient();
+  clientAPI.client.defaults.withCredentials = true;
   const response = await clientAPI.client.post("/users/login", body);
+  return response.data;
+};
+
+export const checkUser = async (cookie: string) => {
+  const clientAPI = new APIClient();
+  clientAPI.client.defaults.withCredentials = true;
+  clientAPI.client.defaults.headers.Cookie = cookie;
+  const response = await clientAPI.client.get<User>("/users");
   return response.data;
 };
