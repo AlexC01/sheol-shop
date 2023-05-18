@@ -13,7 +13,22 @@ const router = express.Router();
 
 const UserModel = User as any;
 
-router.get("/api/users", auth, async (req, res) => {
+router.get("/api/users", async (req, res) => {
+  const session = req.session as any;
+  const authenticatedUserId = session.userId;
+
+  try {
+    if (authenticatedUserId === undefined) {
+      return res.status(401).send({ message: "You are not logged in" });
+    }
+    const user = await UserModel.findById(authenticatedUserId);
+    return res.status(200).send(user);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+router.get("/api/users/all", auth, async (req, res) => {
   try {
     const { user } = req as TypedRequestUser;
     if (user.role === USER_ROLES.user) {
@@ -71,11 +86,23 @@ router.patch("/api/users/me", auth, upload.single("avatar"), async (req, res) =>
 router.post("/api/users/login", async (req, res) => {
   try {
     const user = await UserModel.findByCredentials(req.body.email, req.body.password);
+    const session = req.session as any;
+    session.userId = user._id;
     const token = await user.generateAuthToken();
     return res.send({ user, token });
   } catch (err) {
     return res.status(400).send(err);
   }
+});
+
+router.post("/api/users/logout", async (req, res) => {
+  req.session.destroy(error => {
+    if (error !== null) {
+      return res.status(500).send(error);
+    } else {
+      return res.status(200).send();
+    }
+  });
 });
 
 export default router;

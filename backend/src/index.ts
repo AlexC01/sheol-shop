@@ -16,6 +16,8 @@ import wishlistRouter from "@routes/wishlist";
 import addressRouter from "@routes/address";
 import orderRouter from "@routes/order";
 import couponRouter from "@routes/coupon";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 void connectMongo();
 
@@ -23,6 +25,22 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 app.use(express.json());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET ?? "",
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60
+    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
+    })
+  })
+);
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use([
