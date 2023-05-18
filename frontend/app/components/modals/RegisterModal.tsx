@@ -5,6 +5,7 @@ import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import Modal from "./Modal";
 import Heading from "../Heading";
+import Input from "../inputs/Input";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -29,7 +30,17 @@ const RegisterModal = () => {
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome to Sheol Shop" subtitle="Create an account" />
-      <Input />
+      <Input register={register} id="email" label="Email" disabled={isLoading} errors={errors} required />
+      <Input register={register} id="name" label="Name" disabled={isLoading} errors={errors} required />
+      <Input
+        register={register}
+        id="password"
+        label="Password"
+        type="password"
+        disabled={isLoading}
+        errors={errors}
+        required
+      />
     </div>
   );
 
