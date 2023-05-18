@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectMongo = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/sheol-shop-api");
+    await mongoose.connect(process.env.MONGO_CONNECTION_STRING ?? "");
   } catch (err) {
     console.error(err);
   }
