@@ -4,3 +4,8 @@ export interface UserSignUp {
   password: string;
   name: string;
 }
+
+export interface UserLogIn {
+  email: string;
+  password: string;
+}
