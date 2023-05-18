@@ -7,9 +7,11 @@ import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
 import Modal from "../modals/Modal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 const UserMenu = () => {
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -37,7 +39,7 @@ const UserMenu = () => {
             <div className="absolute rounded-xl shadow-md w-[40vw] z-10 md:w-48 bg-white overflow-hidden right-0 top-16 md:top-12  text-sm">
               <div className="flex flex-col cursor-pointer">
                 <>
-                  <MenuItem onClick={() => {}} label="Login" />
+                  <MenuItem onClick={loginModal.onOpen} label="Login" />
                   <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
                 </>
               </div>
