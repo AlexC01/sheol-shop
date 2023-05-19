@@ -21,3 +21,10 @@ export const checkUser = async (cookie: string) => {
   const response = await clientAPI.client.get<User>("/users");
   return response.data;
 };
+
+export const logOutUser = async () => {
+  const clientAPI = new APIClient();
+  clientAPI.client.defaults.withCredentials = true;
+  const response = await clientAPI.client.post("/users/logout");
+  return response.data;
+};

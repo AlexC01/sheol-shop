@@ -9,8 +9,13 @@ import Search from "./Search";
 import UserMenu from "./UserMenu";
 import Drawer from "../drawer/Drawer";
 import Sidebar from "./sidebar/Sidebar";
+import { User } from "@/app/models/User";
 
-const Navbar = () => {
+interface NavbarProps {
+  currentUser: User | null;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => setIsOpen(!isOpen);
@@ -48,7 +53,7 @@ const Navbar = () => {
                   <div className="hidden md:block">
                     <Search />
                   </div>
-                  <UserMenu />
+                  <UserMenu currentUser={currentUser} />
                 </div>
               </div>
             </div>

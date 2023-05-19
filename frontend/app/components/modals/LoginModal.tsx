@@ -35,7 +35,7 @@ const LoginModal = () => {
     setIsLoading(true);
     const body = { ...(data as UserLogIn) };
     try {
-      const resp = await logIn(body);
+      await logIn(body);
       toast.success("Logged in successfully!");
       router.refresh();
       loginModal.onClose();
