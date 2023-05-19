@@ -11,12 +11,17 @@ import Drawer from "../drawer/Drawer";
 import Sidebar from "./sidebar/Sidebar";
 import { User } from "@/app/models/User";
 import useUserInfo from "@/app/hooks/useUserInfo";
+import { Category } from "@/app/models/Category";
 
 interface NavbarProps {
   currentUser: User | null;
+  categories: {
+    categoriesMen: Category[];
+    categoriesWomen: Category[];
+  };
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [categoryOpen, setCategoryOpen] = useState(false);
