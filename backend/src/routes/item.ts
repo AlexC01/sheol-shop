@@ -2,8 +2,6 @@ import express from "express";
 import upload from "@middleware/multer";
 import Item from "@models/item";
 import Cart from "@models/cart";
-import Categories from "@models/category";
-import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
 import { getQuery, pages } from "@helpers/query";
 import { imagePaths } from "@helpers/paths";
@@ -18,7 +16,7 @@ router.get("/api/items", async (req, res) => {
   const { page, limit, skip } = pages(req);
 
   try {
-    const count = await Item.countDocuments();
+    const count = await Item.countDocuments(query);
     const totalPages = Math.ceil(count / +limit);
     const items = await Item.find(query)
       .sort(sort)
@@ -30,58 +28,6 @@ router.get("/api/items", async (req, res) => {
       .populate("color")
       .populate("brand");
     return res.status(200).send({ totalPages, currentPage: page, items });
-  } catch (err) {
-    return res.status(500).send("Error while fetching items");
-  }
-});
-
-router.get("/api/items/:id/category", async (req, res) => {
-  const { id } = req.params;
-
-  const { sort, query } = getQuery(req, undefined, id);
-
-  const { page, limit, skip } = pages(req);
-
-  try {
-    const totalDocuments = await Item.countDocuments(query);
-    const category = await Categories.findById(req.params.id);
-    if (category === null) throw new Error();
-    const items = await Item.find(query)
-      .sort(sort)
-      .limit(limit)
-      .skip(skip)
-      .populate({ path: "sizes", populate: { path: "size" } })
-      .populate("color")
-      .populate("brand");
-
-    const totalPages = Math.ceil(totalDocuments / +limit);
-    return res.status(200).send({ name: category.name, totalPages, currentPage: page, items });
-  } catch (err) {
-    return res.status(500).send("Error while fetching items");
-  }
-});
-
-router.get("/api/items/:id/subcategory", async (req, res) => {
-  const { id } = req.params;
-
-  const { sort, query } = getQuery(req, id);
-
-  const { page, limit, skip } = pages(req);
-
-  try {
-    const totalDocuments = await Item.countDocuments(query);
-    const subcategory = await SubCategories.findById(req.params.id);
-    if (subcategory === null) throw new Error();
-    const items = await Item.find(query)
-      .sort(sort)
-      .limit(limit)
-      .skip(skip)
-      .populate({ path: "sizes", populate: { path: "size" } })
-      .populate("color")
-      .populate("brand");
-
-    const totalPages = Math.ceil(totalDocuments / +limit);
-    return res.status(200).send({ name: subcategory.name, totalPages, currentPage: page, items });
   } catch (err) {
     return res.status(500).send("Error while fetching items");
   }

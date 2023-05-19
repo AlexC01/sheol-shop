@@ -2,7 +2,7 @@ import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_VALIDATIONS } from "@constant
 import { TypedRequestQuery } from "@interfaces/express-int";
 import { SortOrder } from "mongoose";
 
-export const getQuery = (req: TypedRequestQuery, subCatId?: string, catId?: string) => {
+export const getQuery = (req: TypedRequestQuery) => {
   const {
     sortBy = DEFAULT_SORT_BY,
     sortOrder = DEFAULT_SORT_ORDER,
@@ -11,6 +11,8 @@ export const getQuery = (req: TypedRequestQuery, subCatId?: string, catId?: stri
     brands,
     minPrice,
     maxPrice,
+    category,
+    subcategory,
     search
   } = req.query;
 
@@ -21,12 +23,12 @@ export const getQuery = (req: TypedRequestQuery, subCatId?: string, catId?: stri
 
   const query = {} as any;
 
-  if (catId !== undefined) {
-    query.category = catId;
+  if (category !== undefined) {
+    query.category = category;
   }
 
-  if (subCatId !== undefined) {
-    query.subcategory = subCatId;
+  if (subcategory !== undefined) {
+    query.subcategory = subcategory;
   }
 
   if (search !== undefined) {
