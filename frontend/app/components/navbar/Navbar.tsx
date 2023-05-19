@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import Container from "../container/Container";
 import Logo from "./Logo";
@@ -10,6 +10,7 @@ import UserMenu from "./UserMenu";
 import Drawer from "../drawer/Drawer";
 import Sidebar from "./sidebar/Sidebar";
 import { User } from "@/app/models/User";
+import useUserInfo from "@/app/hooks/useUserInfo";
 
 interface NavbarProps {
   currentUser: User | null;
@@ -17,8 +18,19 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [category, setCategory] = useState("");
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const userInfo = useUserInfo();
+
+  useEffect(() => {
+    userInfo.changeUserInfo(currentUser);
+  }, [currentUser]);
 
   const toggleOpen = () => setIsOpen(!isOpen);
+
+  const toggleCategoryOpen = () => setCategoryOpen(true);
+  const toggleCategoryClose = () => setCategoryOpen(false);
+  const toggleCategory = (cat: string) => setCategory(cat);
 
   return (
     <div className="relative">
@@ -48,7 +60,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                 <Logo />
               </div>
               <div className="flex lg:flex-1 items-center md:justify-between gap-2 lg:gap-0">
-                <Options />
+                <div className="h-full">
+                  <Options
+                    toggleCategory={toggleCategory}
+                    toggleCategoryOpen={toggleCategoryOpen}
+                    toggleCategoryClose={toggleCategoryClose}
+                  />
+                </div>
                 <div className="flex items-center gap-4 justify-end lg:justify-between xl:justify-end">
                   <div className="hidden md:block">
                     <Search />
@@ -62,6 +80,39 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             </div>
           </Container>
         </div>
+        {categoryOpen && (
+          <div
+            onMouseEnter={() => toggleCategoryOpen()}
+            onMouseLeave={() => toggleCategoryClose()}
+            className={`
+                    bg-white
+                    relative 
+                    shadow-sm
+                    before:content-['']
+                    before:absolute
+                    before:top-0
+                    before:border-solid
+                    before:border-b-[10px]
+                    before:3xl:border-b-transparent
+                    before:border-r-[10px]
+                    before:border-t-[0px]
+                    before:border-l-[10px]
+                    before:border-t-transparent
+                    before:border-r-transparent
+                    before:border-l-transparent
+                    before:border-b-neutral-200
+                    ${
+                      category === "women"
+                        ? "before:left-[265px] xl:before:left-[310px]"
+                        : "before:left-[350px] xl:before:left-[400px]"
+                    }
+                    before:translate-y-[-100%]
+                    before:translate-x-[100%]
+                    `}
+          >
+            {category}
+          </div>
+        )}
       </nav>
     </div>
   );

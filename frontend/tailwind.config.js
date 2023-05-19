@@ -17,6 +17,9 @@ module.exports = {
         third: "#ECC1A1",
         fourth: "#F5F1EE",
         fifth: "#FF385C"
+      },
+      screens: {
+        "3xl": "1930px"
       }
     }
   },
