@@ -9,6 +9,7 @@ const itemSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     description: { type: String, trim: true, required: true },
     price: { type: Number, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory", required: true },
     color: { type: mongoose.Schema.Types.ObjectId, ref: "Color", required: true },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },

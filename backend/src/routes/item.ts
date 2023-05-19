@@ -2,6 +2,7 @@ import express from "express";
 import upload from "@middleware/multer";
 import Item from "@models/item";
 import Cart from "@models/cart";
+import Categories from "@models/category";
 import SubCategories from "@models/subcategory";
 import mongoose from "mongoose";
 import { getQuery, pages } from "@helpers/query";
@@ -23,11 +24,38 @@ router.get("/api/items", async (req, res) => {
       .sort(sort)
       .limit(limit)
       .skip(skip)
+      .populate("category")
       .populate("subcategory")
       .populate({ path: "sizes", populate: { path: "size" } })
       .populate("color")
       .populate("brand");
     return res.status(200).send({ totalPages, currentPage: page, items });
+  } catch (err) {
+    return res.status(500).send("Error while fetching items");
+  }
+});
+
+router.get("/api/items/:id/category", async (req, res) => {
+  const { id } = req.params;
+
+  const { sort, query } = getQuery(req, undefined, id);
+
+  const { page, limit, skip } = pages(req);
+
+  try {
+    const totalDocuments = await Item.countDocuments(query);
+    const category = await Categories.findById(req.params.id);
+    if (category === null) throw new Error();
+    const items = await Item.find(query)
+      .sort(sort)
+      .limit(limit)
+      .skip(skip)
+      .populate({ path: "sizes", populate: { path: "size" } })
+      .populate("color")
+      .populate("brand");
+
+    const totalPages = Math.ceil(totalDocuments / +limit);
+    return res.status(200).send({ name: category.name, totalPages, currentPage: page, items });
   } catch (err) {
     return res.status(500).send("Error while fetching items");
   }
@@ -62,6 +90,7 @@ router.get("/api/items/:id/subcategory", async (req, res) => {
 router.get("/api/items/:id", async (req, res) => {
   try {
     const item = await Item.findById(req.params.id)
+      .populate("category")
       .populate("subcategory")
       .populate({ path: "sizes", populate: { path: "size" } })
       .populate("color")
@@ -74,14 +103,19 @@ router.get("/api/items/:id", async (req, res) => {
   }
 });
 
-router.get("/api/items/filters", async (req, res) => {
-  const { subcategoryId, search } = req.body;
+router.get("/api/items/filters/section", async (req, res) => {
+  const { subcategory, search, category } = req.query;
 
   const pipeline = [];
 
-  if (subcategoryId !== undefined) {
-    const catId = new mongoose.Types.ObjectId(subcategoryId);
-    pipeline.push({ $match: { subcategory: catId } });
+  if (subcategory !== undefined) {
+    const subCategoryId = new mongoose.Types.ObjectId(subcategory as string);
+    pipeline.push({ $match: { subcategory: subCategoryId } });
+  }
+
+  if (category !== undefined) {
+    const categoryId = new mongoose.Types.ObjectId(category as string);
+    pipeline.push({ $match: { category: categoryId } });
   }
 
   if (search !== undefined) {

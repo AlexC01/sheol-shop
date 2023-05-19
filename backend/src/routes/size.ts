@@ -3,9 +3,9 @@ import Size from "@models/size";
 
 const router = express.Router();
 
-router.get("/api/sizes", async (_req, res) => {
+router.get("/api/sizes", async (req, res) => {
   try {
-    const sizes = await Size.find();
+    const sizes = await Size.find(req.query);
     res.send(sizes);
   } catch (err) {
     res.status(500).send("Error while fetching sizes");
