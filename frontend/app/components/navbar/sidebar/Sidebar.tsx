@@ -4,15 +4,21 @@ import { useState } from "react";
 import Rows from "./Rows";
 import SidebarHeader from "./SidebarHeader";
 import CategoryDetail from "./CategoryDetail";
+import { Category } from "@/app/models/Category";
 
-const Sidebar = () => {
+interface SidebarProps {
+  categoriesMen: Category[];
+  categoriesWomen: Category[];
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ categoriesMen, categoriesWomen }) => {
   const [active, setActive] = useState("women");
   const [openCategory, setOpenCategory] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
+  const [categoryDetail, setCategoryDetail] = useState<Category | null>(null);
 
   const toggleCategoryOpen = () => setOpenCategory(!openCategory);
 
-  const changeCategory = (name: string) => setCategoryName(name);
+  const changeCategory = (cat: Category) => setCategoryDetail(cat);
 
   return (
     <div className="relative w-screen max-w-md h-full overflow-y-auto overflow-x-hidden">
@@ -47,7 +53,30 @@ const Sidebar = () => {
           />
         </div>
         <div className="mt-2">
-          <Rows label="Sale" toggleOpenCategory={toggleCategoryOpen} changeCategory={changeCategory} />
+          {active === "women" && (
+            <>
+              {categoriesWomen.map(category => (
+                <Rows
+                  key={category.id}
+                  category={category}
+                  toggleOpenCategory={toggleCategoryOpen}
+                  changeCategory={changeCategory}
+                />
+              ))}
+            </>
+          )}
+          {active === "men" && (
+            <>
+              {categoriesMen.map(category => (
+                <Rows
+                  key={category.id}
+                  category={category}
+                  toggleOpenCategory={toggleCategoryOpen}
+                  changeCategory={changeCategory}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div
@@ -55,7 +84,7 @@ const Sidebar = () => {
           openCategory ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <CategoryDetail toggleCategoryOpen={toggleCategoryOpen} name={categoryName} />
+        {categoryDetail && <CategoryDetail toggleCategoryOpen={toggleCategoryOpen} category={categoryDetail} />}
       </div>
     </div>
   );
