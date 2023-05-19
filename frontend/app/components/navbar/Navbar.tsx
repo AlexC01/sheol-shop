@@ -12,6 +12,7 @@ import Sidebar from "./sidebar/Sidebar";
 import { User } from "@/app/models/User";
 import useUserInfo from "@/app/hooks/useUserInfo";
 import { Category } from "@/app/models/Category";
+import NavbarCategories from "./NavbarCategories";
 
 interface NavbarProps {
   currentUser: User | null;
@@ -40,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
   return (
     <div className="relative">
       <Drawer isOpen={isOpen} toggleOpen={toggleOpen}>
-        <Sidebar />
+        <Sidebar categoriesMen={categories.categoriesMen} categoriesWomen={categories.categoriesWomen} />
       </Drawer>
       <nav className="fixed w-full bg-white z-10 shadow-sm">
         <div className="h-36 md:h-20 border-b-[1px]">
@@ -85,11 +86,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
             </div>
           </Container>
         </div>
-        {categoryOpen && (
-          <div
-            onMouseEnter={() => toggleCategoryOpen()}
-            onMouseLeave={() => toggleCategoryClose()}
-            className={`
+        <div
+          onMouseEnter={() => toggleCategoryOpen()}
+          onMouseLeave={() => toggleCategoryClose()}
+          className={`
                     bg-white
                     relative 
                     shadow-sm
@@ -114,10 +114,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
                     before:translate-y-[-100%]
                     before:translate-x-[100%]
                     `}
-          >
-            {category}
-          </div>
-        )}
+        >
+          {category === "men" && <NavbarCategories categories={categories.categoriesMen} system="men" />}
+          {category === "women" && <NavbarCategories categories={categories.categoriesWomen} system="women" />}
+        </div>
       </nav>
     </div>
   );
