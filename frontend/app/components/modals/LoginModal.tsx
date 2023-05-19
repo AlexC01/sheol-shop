@@ -52,12 +52,15 @@ const LoginModal = () => {
       <Button outline label="Continue with Google" icon={FcGoogle} onClick={() => {}} />
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex flex-row items-center gap-2 justify-center">
-          <div>Already have an account?</div>
+          <div>You dont have an account?</div>
           <div
-            onClick={registerModal.onClose}
+            onClick={() => {
+              loginModal.onClose();
+              registerModal.onOpen();
+            }}
             className="text-neutral-800 cursor-pointer font-semibold hover:underline"
           >
-            Log in
+            Sign Up
           </div>
         </div>
       </div>

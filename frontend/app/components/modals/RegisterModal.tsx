@@ -35,7 +35,7 @@ const RegisterModal = () => {
     setIsLoading(true);
     const body = { ...(data as UserSignUp) };
     try {
-      const resp = await signUp(body);
+      await signUp(body);
       toast.success("Account created successfully!");
       registerModal.onClose();
       loginModal.onOpen();
@@ -54,7 +54,10 @@ const RegisterModal = () => {
         <div className="flex flex-row items-center gap-2 justify-center">
           <div>Already have an account?</div>
           <div
-            onClick={registerModal.onClose}
+            onClick={() => {
+              registerModal.onClose();
+              loginModal.onOpen();
+            }}
             className="text-neutral-800 cursor-pointer font-semibold hover:underline"
           >
             Log in
