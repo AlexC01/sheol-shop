@@ -5,7 +5,7 @@ const categorySchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     description: { type: String, trim: true, required: false },
     system: { type: String, required: true, enum: ["men", "women"] },
-    image: { type: String, required: true }
+    thumbnail: { type: String, required: true }
   },
   { toJSON: { virtuals: true } }
 );

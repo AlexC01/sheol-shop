@@ -23,7 +23,8 @@ const itemSchema = new mongoose.Schema(
     discount: { type: Number, required: false, default: 0 },
     discountPrice: { type: Number, required: false, default: 0 },
     rate: { type: Number, required: false, default: 0 },
-    totalReviews: { type: Number, required: false, default: 0 }
+    totalReviews: { type: Number, required: false, default: 0 },
+    isFeatured: { type: Boolean, required: true, default: false }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );

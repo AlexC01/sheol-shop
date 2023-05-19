@@ -1,7 +1,7 @@
 export const IMAGES_RESOLUTIONS = {
   hero: {
-    width: 1280,
-    height: 720
+    width: 1500,
+    height: 600
   },
   sections: {
     width: 850,
@@ -10,6 +10,10 @@ export const IMAGES_RESOLUTIONS = {
   avatar: {
     width: 200,
     height: 200
+  },
+  thumbnail: {
+    width: 300,
+    height: 300
   },
   product: {
     width: 600,

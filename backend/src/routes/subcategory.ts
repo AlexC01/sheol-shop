@@ -29,17 +29,17 @@ router.get("/api/subcategories/:id", async (req, res) => {
   }
 });
 
-router.post("/api/subcategories", upload.single("image"), async (req, res) => {
+router.post("/api/subcategories", upload.single("thumbnail"), async (req, res) => {
   const { file } = req;
   try {
     if (file === undefined) throw new Error("Image is required");
     const { imagePath, toFilePath } = imagePaths(file.filename);
     await sharp(file.path)
-      .resize(IMAGES_RESOLUTIONS.sections.width, IMAGES_RESOLUTIONS.sections.height)
+      .resize(IMAGES_RESOLUTIONS.thumbnail.width, IMAGES_RESOLUTIONS.thumbnail.height)
       .webp()
       .toFile(toFilePath);
     fs.unlinkSync(file.path);
-    req.body.image = imagePath;
+    req.body.thumbnail = imagePath;
     const subcategory = new SubCategory(req.body);
     await subcategory.save();
     return res.status(201).send(subcategory);

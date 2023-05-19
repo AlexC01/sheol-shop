@@ -8,9 +8,9 @@ import { imagePaths } from "@helpers/paths";
 
 const router = express.Router();
 
-router.get("/api/categories", async (_req, res) => {
+router.get("/api/categories", async (req, res) => {
   try {
-    const categories = await Category.find().populate("subcategories");
+    const categories = await Category.find(req.query).populate("subcategories");
     res.send(categories);
   } catch (err) {
     res.status(500).send("Error while fetching categories");
@@ -27,18 +27,18 @@ router.get("/api/categories/:id", async (req, res) => {
   }
 });
 
-router.post("/api/categories", upload.single("image"), async (req, res) => {
-  const { path: pathFile, filename } = req.file as Express.Multer.File;
+router.post("/api/categories", upload.single("thumbnail"), async (req, res) => {
+  const { path: pathFileThumbnail, filename: filenameThumbnail } = req.file as Express.Multer.File;
 
   try {
-    const { imagePath, toFilePath } = imagePaths(filename);
+    const { imagePath: imagePathThumbnail, toFilePath: toFilePathThumbnail } = imagePaths(filenameThumbnail);
 
-    await sharp(pathFile)
-      .resize(IMAGES_RESOLUTIONS.hero.width, IMAGES_RESOLUTIONS.hero.height)
+    await sharp(pathFileThumbnail)
+      .resize(IMAGES_RESOLUTIONS.thumbnail.width, IMAGES_RESOLUTIONS.thumbnail.height)
       .webp()
-      .toFile(toFilePath);
-    fs.unlinkSync(pathFile);
-    req.body.image = imagePath;
+      .toFile(toFilePathThumbnail);
+    fs.unlinkSync(pathFileThumbnail);
+    req.body.thumbnail = imagePathThumbnail;
 
     const category = new Category(req.body);
     await category.save();
