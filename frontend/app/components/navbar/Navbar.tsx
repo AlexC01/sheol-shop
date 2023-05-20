@@ -86,10 +86,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
             </div>
           </Container>
         </div>
-        <div
-          onMouseEnter={() => toggleCategoryOpen()}
-          onMouseLeave={() => toggleCategoryClose()}
-          className={`
+        {categoryOpen && (
+          <div
+            onMouseEnter={() => toggleCategoryOpen()}
+            onMouseLeave={() => toggleCategoryClose()}
+            className={`
                     bg-white
                     relative 
                     shadow-sm
@@ -114,10 +115,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
                     before:translate-y-[-100%]
                     before:translate-x-[100%]
                     `}
-        >
-          {category === "men" && <NavbarCategories categories={categories.categoriesMen} system="men" />}
-          {category === "women" && <NavbarCategories categories={categories.categoriesWomen} system="women" />}
-        </div>
+          >
+            {category === "men" && <NavbarCategories categories={categories.categoriesMen} system="men" />}
+            {category === "women" && <NavbarCategories categories={categories.categoriesWomen} system="women" />}
+          </div>
+        )}
       </nav>
     </div>
   );

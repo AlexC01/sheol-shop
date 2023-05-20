@@ -31,21 +31,26 @@ const NavbarCategories: React.FC<NavbarCategoriesProps> = ({ categories, system 
         </div>
         <div className="hidden xl:grid grid-cols-3 gap-5">
           <div className="flex justify-start items-center flex-col">
-            <Image src="/images/sales-men.webp" width={200} height={200} alt={`Sales for ${system}`} />
+            <Image src={`/images/sales-${system}.webp`} width={200} height={200} alt={`Sales for ${system}`} />
             <ul className="text-center mt-4 group cursor-pointer">
               <li className="font-semibold group-hover:underline">Sales and Deals</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
             </ul>
           </div>
           <div className="flex justify-start items-center flex-col">
-            <Image src="/images/arrivals-men.webp" width={200} height={200} alt={`New Arrivals for ${system}`} />
+            <Image
+              src={`/images/arrivals-${system}.webp`}
+              width={200}
+              height={200}
+              alt={`New Arrivals for ${system}`}
+            />
             <ul className="text-center mt-4 group cursor-pointer">
               <li className="font-semibold group-hover:underline">New Arrivals</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
             </ul>
           </div>
           <div className="flex justify-start items-center flex-col">
-            <Image src="/images/featured-men.webp" width={200} height={200} alt={`Featured for ${system}`} />
+            <Image src={`/images/featured-${system}.webp`} width={200} height={200} alt={`Featured for ${system}`} />
             <ul className="text-center mt-4 group cursor-pointer">
               <li className="font-semibold group-hover:underline">Featured</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
