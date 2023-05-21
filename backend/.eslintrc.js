@@ -23,7 +23,8 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-misused-promises": "off",
-    "@typescript-eslint/consistent-type-imports": "off"
+    "@typescript-eslint/consistent-type-imports": "off",
+    "@typescript-eslint/no-floating-promises": "off"
   },
   globals: { process: true, __dirname: true }
 };

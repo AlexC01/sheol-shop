@@ -9,7 +9,6 @@
       "@routes/*": ["src/routes/*"],
       "@models/*": ["src/models/*"],
       "@interfaces/*": ["src/interfaces/*"],
-      "@db/*": ["src/db/*"],
       "@middleware/*": ["src/middleware/*"],
       "@constants/*": ["src/constants/*"],
       "@helpers/*": ["src/helpers/*"]

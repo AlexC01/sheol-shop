@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import cors from "cors";
-import connectMongo from "@db/mongoose";
+import mongoose from "mongoose";
 import categoryRouter from "@routes/category";
 import subcategoryRouter from "@routes/subcategory";
 import sizeRouter from "@routes/size";
@@ -18,8 +18,6 @@ import orderRouter from "@routes/order";
 import couponRouter from "@routes/coupon";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-
-void connectMongo();
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -58,6 +56,14 @@ app.use([
   couponRouter
 ]);
 
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_CONNECTION_STRING ?? "")
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
