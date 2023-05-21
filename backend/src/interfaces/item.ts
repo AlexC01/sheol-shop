@@ -17,4 +17,5 @@ export interface ItemInterface {
   subcategory: Types.ObjectId;
   discount?: number;
   discountPrice?: number;
+  isDiscount: boolean;
 }

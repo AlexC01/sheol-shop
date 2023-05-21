@@ -66,16 +66,16 @@ router.get("/api/items/filters/section", async (req, res) => {
 
   if (search !== undefined) {
     pipeline.push({ $match: { name: { $regex: search, $options: "i" } } });
-
-    pipeline.push({
-      $lookup: {
-        from: "subcategories",
-        localField: "subcategory",
-        foreignField: "_id",
-        as: "subcategories"
-      }
-    });
   }
+
+  pipeline.push({
+    $lookup: {
+      from: "subcategories",
+      localField: "subcategory",
+      foreignField: "_id",
+      as: "subcategories"
+    }
+  });
 
   pipeline.push({
     $lookup: {

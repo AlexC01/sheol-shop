@@ -12,6 +12,7 @@ const itemSchema = new mongoose.Schema(
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory", required: true },
     color: { type: mongoose.Schema.Types.ObjectId, ref: "Color", required: true },
+    system: { type: String, required: true, enum: ["men", "women"] },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
     images: [{ type: String, required: true }],
     sizes: [
@@ -25,7 +26,8 @@ const itemSchema = new mongoose.Schema(
     discountPrice: { type: Number, required: false, default: 0 },
     rate: { type: Number, required: false, default: 0 },
     totalReviews: { type: Number, required: false, default: 0 },
-    isFeatured: { type: Boolean, required: true, default: false }
+    isFeatured: { type: Boolean, required: true, default: false },
+    isDiscount: { type: Boolean, required: true, default: false }
   },
   { toJSON: { virtuals: true }, timestamps: true }
 );
@@ -45,9 +47,13 @@ itemSchema.virtual("carts", {
 itemSchema.pre("save", async function (next) {
   const item: ItemInterface = this;
   item.totalStock = item.sizes.reduce((acc, curr) => acc + curr.stock, 0);
-  if (item.discount !== undefined && item.discount > 0)
+  if (item.discount !== undefined && item.discount > 0) {
     item.discountPrice = parseFloat(getDiscount(item.price, item.discount).toFixed(2));
-  else item.discountPrice = 0;
+    item.isDiscount = true;
+  } else {
+    item.discountPrice = 0;
+    item.isDiscount = false;
+  }
   next();
 });
 

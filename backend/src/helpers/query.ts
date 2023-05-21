@@ -12,6 +12,10 @@ export const getQuery = (req: TypedRequestQuery) => {
     minPrice,
     maxPrice,
     category,
+    system,
+    isFeatured,
+    isOnSale,
+    isNewArrivals,
     subcategory,
     search
   } = req.query;
@@ -23,6 +27,10 @@ export const getQuery = (req: TypedRequestQuery) => {
 
   const query = {} as any;
 
+  if (system !== undefined) {
+    query.system = system;
+  }
+
   if (category !== undefined) {
     query.category = category;
   }
@@ -33,6 +41,19 @@ export const getQuery = (req: TypedRequestQuery) => {
 
   if (search !== undefined) {
     query.name = { $regex: search, $options: "i" };
+  }
+
+  if (isFeatured !== undefined) {
+    query.isFeatured = true;
+  }
+
+  if (isOnSale !== undefined) {
+    query.isDiscount = true;
+  }
+
+  if (isNewArrivals !== undefined) {
+    // it shows the products added in the last 7 days
+    query.createdAt = { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) };
   }
 
   if (sizes !== undefined) {
