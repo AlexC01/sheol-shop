@@ -1,5 +1,4 @@
 import Container from "./components/container/Container";
-import Image from "next/image";
 import Slider from "./components/slider/Slider";
 
 export default function Home() {
@@ -7,7 +6,12 @@ export default function Home() {
     <Container>
       <div className="pt-24">
         <header>
-          <Slider images={["/images/home/slider_first.webp", "/images/home/slider_second.webp"]} />
+          <Slider
+            images={[
+              { url: "/images/home/slider_first.webp", route: "" },
+              { url: "/images/home/slider_second.webp", route: "" }
+            ]}
+          />
         </header>
       </div>
     </Container>
