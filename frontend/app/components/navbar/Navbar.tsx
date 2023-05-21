@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import Container from "../container/Container";
 import Logo from "./Logo";
 import Options from "./Options";
 import Search from "./Search";
@@ -45,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
       </Drawer>
       <nav className="fixed w-full bg-white z-10 shadow-sm">
         <div className="h-36 md:h-20 border-b-[1px]">
-          <Container>
+          <div className="max-w-[1650px] mx-auto xl:px-16 md:px-10 sm:px-2 px-4">
             <div className="flex items-center gap-4 xl:gap-6 justify-between">
               <div
                 onClick={toggleOpen}
@@ -84,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
             <div className="block md:hidden mt-2">
               <Search />
             </div>
-          </Container>
+          </div>
         </div>
         {categoryOpen && (
           <div

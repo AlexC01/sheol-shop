@@ -30,28 +30,28 @@ const NavbarCategories: React.FC<NavbarCategoriesProps> = ({ categories, system 
           ))}
         </div>
         <div className="hidden xl:grid grid-cols-3 gap-5">
-          <div className="flex justify-start items-center flex-col">
+          <div className="flex justify-start items-center flex-col group cursor-pointer">
             <Image src={`/images/sales-${system}.webp`} width={200} height={200} alt={`Sales for ${system}`} />
-            <ul className="text-center mt-4 group cursor-pointer">
+            <ul className="text-center mt-4">
               <li className="font-semibold group-hover:underline">Sales and Deals</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
             </ul>
           </div>
-          <div className="flex justify-start items-center flex-col">
+          <div className="flex justify-start items-center flex-col group cursor-pointer">
             <Image
               src={`/images/arrivals-${system}.webp`}
               width={200}
               height={200}
               alt={`New Arrivals for ${system}`}
             />
-            <ul className="text-center mt-4 group cursor-pointer">
+            <ul className="text-center mt-4">
               <li className="font-semibold group-hover:underline">New Arrivals</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
             </ul>
           </div>
-          <div className="flex justify-start items-center flex-col">
+          <div className="flex justify-start items-center flex-col group cursor-pointer">
             <Image src={`/images/featured-${system}.webp`} width={200} height={200} alt={`Featured for ${system}`} />
-            <ul className="text-center mt-4 group cursor-pointer">
+            <ul className="text-center mt-4">
               <li className="font-semibold group-hover:underline">Featured</li>
               <li className="mt-1.5 group-hover:underline">Shop now</li>
             </ul>
