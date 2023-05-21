@@ -70,6 +70,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
                     toggleCategory={toggleCategory}
                     toggleCategoryOpen={toggleCategoryOpen}
                     toggleCategoryClose={toggleCategoryClose}
+                    category={category}
+                    categoryOpen={categoryOpen}
                   />
                 </div>
                 <div className="flex items-center gap-4 justify-end lg:justify-between xl:justify-end">
@@ -89,31 +91,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, categories }) => {
           <div
             onMouseEnter={() => toggleCategoryOpen()}
             onMouseLeave={() => toggleCategoryClose()}
-            className={`
+            className="
                     bg-white
                     relative 
                     shadow-sm
-                    before:content-['']
-                    before:absolute
-                    before:top-0
-                    before:border-solid
-                    before:border-b-[10px]
-                    before:3xl:border-b-transparent
-                    before:border-r-[10px]
-                    before:border-t-[0px]
-                    before:border-l-[10px]
-                    before:border-t-transparent
-                    before:border-r-transparent
-                    before:border-l-transparent
-                    before:border-b-neutral-200
-                    ${
-                      category === "women"
-                        ? "before:left-[265px] xl:before:left-[310px]"
-                        : "before:left-[350px] xl:before:left-[400px]"
-                    }
-                    before:translate-y-[-100%]
-                    before:translate-x-[100%]
-                    `}
+                   "
           >
             {category === "men" && <NavbarCategories categories={categories.categoriesMen} system="men" />}
             {category === "women" && <NavbarCategories categories={categories.categoriesWomen} system="women" />}

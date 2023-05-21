@@ -46,15 +46,15 @@ const Slider: React.FC<SliderProps> = ({ images, autoSlide = true, autoSlideInte
       </div>
       <button
         onClick={prev}
-        className="absolute top-1/2 left-2 p-2 flex items-center justify-center rounded-full shadow bg-white/80 text-gray-800 hover:bg-white transition ease-linear"
+        className="absolute top-1/2 left-2 p-1 md:p-2 flex items-center justify-center rounded-full shadow bg-white/80 text-gray-800 hover:bg-white transition ease-linear"
       >
-        <BsChevronLeft size={20} />
+        <BsChevronLeft size={16} />
       </button>
       <button
         onClick={next}
-        className="p-2 absolute top-1/2 right-2 flex items-center justify-center rounded-full shadow bg-white/80 text-gray-800 hover:bg-white transition ease-linear"
+        className="p-1 md:p-2 absolute top-1/2 right-2 flex items-center justify-center rounded-full shadow bg-white/80 text-gray-800 hover:bg-white transition ease-linear"
       >
-        <BsChevronRight size={20} />
+        <BsChevronRight size={16} />
       </button>
       <div className="absolute bottom-4 right-0 left-0">
         <div className="flex items-center justify-center gap-2">
@@ -63,7 +63,7 @@ const Slider: React.FC<SliderProps> = ({ images, autoSlide = true, autoSlideInte
               onClick={() => jump(index)}
               key={index}
               className={`transition-all cursor-pointer w-3 h-3 bg-white rounded-full ${
-                curr === index ? "p-2" : "bg-opacity-50"
+                curr === index ? "p-1 md:p-2" : "bg-opacity-50"
               }`}
             />
           ))}
