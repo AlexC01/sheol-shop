@@ -22,20 +22,20 @@ import MongoStore from "connect-mongo";
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
-const whiteList = ["https://sheol-shop.vercel.app/", "http://localhost:3000"];
-
 const corsOptions = {
-  origin: function (origin: any, callback: any) {
-    if (whiteList.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "https://sheol-shop.vercel.app/",
   credentials: true,
-  optionsSuccessStatus: 200,
-  methods: "GET, PUT, POST, DELETE, PATCH",
-  allowedHeaders: "Content-Type, Authorization, X-Requested-With"
+  methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
+  allowedHeaders: [
+    "Content-Type",
+    "Origin",
+    "X-Requested-With",
+    "Accept",
+    "x-client-key",
+    "x-client-token",
+    "x-client-secret",
+    "Authorization"
+  ]
 };
 
 app.use(cors(corsOptions));
