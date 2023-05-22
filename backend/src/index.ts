@@ -23,7 +23,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 const corsOptions = {
-  origin: "https://sheol-shop.vercel.app/",
+  origin: "https://sheol-shop.vercel.app",
   credentials: true,
   methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
   allowedHeaders: [
