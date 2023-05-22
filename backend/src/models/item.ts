@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import mongoose from "mongoose";
 import { type ItemInterface } from "@interfaces/item";
-import getDiscount from "src/helpers/price";
+import getDiscount from "@helpers/price";
 
 const itemSchema = new mongoose.Schema(
   {

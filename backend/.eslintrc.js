@@ -24,7 +24,25 @@ module.exports = {
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/consistent-type-imports": "off",
-    "@typescript-eslint/no-floating-promises": "off"
+    "@typescript-eslint/no-floating-promises": "off",
+    "import/no-unresolved": [
+      "error",
+      {
+        plugins: [
+          "module-resolver",
+          {
+            alias: {
+              "@routes": "./src/routes",
+              "@constants": "./src/constants",
+              "@helpers": "./src/helpers",
+              "@interfaces": "./src/interfaces",
+              "@middleware": "./src/middleware",
+              "@models": "./src/models"
+            }
+          }
+        ]
+      }
+    ]
   },
   globals: { process: true, __dirname: true }
 };
