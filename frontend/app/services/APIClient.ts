@@ -6,7 +6,7 @@ class APIClient {
   constructor(url: string = `${process.env.NEXT_PUBLIC_API_URL}/api`) {
     this.client = axios.create({
       baseURL: url,
-      headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" }
     });
 
     this.client.interceptors.response.use(
