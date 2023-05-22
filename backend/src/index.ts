@@ -22,6 +22,23 @@ import MongoStore from "connect-mongo";
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
+const whiteList = ["https://sheol-shop.vercel.app/", "http://localhost:3000"];
+
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (whiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: "GET, PUT, POST, DELETE, PATCH",
+  allowedHeaders: "Content-Type, Authorization, X-Requested-With"
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(
   session({
@@ -39,7 +56,6 @@ app.use(
 );
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// app.use(cors({ credentials: true, origin: ["https://sheol-shop.vercel.app/", "http://localhost:3000"] }));
 app.use([
   categoryRouter,
   subcategoryRouter,
