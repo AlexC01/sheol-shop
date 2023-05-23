@@ -22,17 +22,32 @@ import MongoStore from "connect-mongo";
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
+const corsOptions = {
+  origin: "https://sheol-shop.vercel.app",
+  credentials: true
+  // methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
+  // allowedHeaders: [
+  //   "Content-Type",
+  //   "Origin",
+  //   "X-Requested-With",
+  //   "Accept",
+  //   "x-client-key",
+  //   "x-client-token",
+  //   "x-client-secret",
+  //   "Authorization"
+  // ],
+  // exposedHeaders: "Set-Cookie"
+};
+app.use(cors(corsOptions));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET ?? "",
     resave: false,
     saveUninitialized: false,
-    rolling: true,
     cookie: {
-      maxAge: 1000 * 60 * 60,
-      sameSite: "none",
       secure: true,
-      httpOnly: false
+      httpOnly: true
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
@@ -40,23 +55,6 @@ app.use(
   })
 );
 
-const corsOptions = {
-  origin: "https://sheol-shop.vercel.app",
-  credentials: true,
-  methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
-  allowedHeaders: [
-    "Content-Type",
-    "Origin",
-    "X-Requested-With",
-    "Accept",
-    "x-client-key",
-    "x-client-token",
-    "x-client-secret",
-    "Authorization"
-  ],
-  exposedHeaders: "Set-Cookie"
-};
-app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
