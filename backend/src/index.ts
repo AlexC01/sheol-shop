@@ -22,6 +22,24 @@ import MongoStore from "connect-mongo";
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET ?? "",
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60,
+      sameSite: "none",
+      secure: true,
+      httpOnly: true
+    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
+    })
+  })
+);
+
 const corsOptions = {
   origin: "https://sheol-shop.vercel.app",
   credentials: true,
@@ -41,22 +59,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.set("trust proxy", true);
 app.use(express.json());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET ?? "",
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-      maxAge: 1000 * 60 * 60,
-      sameSite: true,
-      httpOnly: true
-    },
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
-    })
-  })
-);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use([
