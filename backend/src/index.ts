@@ -36,10 +36,10 @@ const corsOptions = {
     "x-client-secret",
     "Authorization"
   ],
-  exposedHeaders: ["Set-Cookie"]
+  exposedHeaders: "Set-Cookie"
 };
 app.use(cors(corsOptions));
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 app.use(express.json());
 app.use(
   session({
@@ -49,7 +49,8 @@ app.use(
     rolling: true,
     cookie: {
       maxAge: 1000 * 60 * 60,
-      sameSite: "none"
+      sameSite: true,
+      httpOnly: true
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
