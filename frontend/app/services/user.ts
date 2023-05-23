@@ -10,6 +10,7 @@ export const signUp = async (body: UserSignUp) => {
 export const logIn = async (body: UserLogIn) => {
   const clientAPI = new APIClient();
   clientAPI.client.defaults.withCredentials = true;
+
   const response = await clientAPI.client.post("/users/login", body);
   return response.data;
 };
