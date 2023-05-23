@@ -16,6 +16,7 @@ const UserModel = User as any;
 router.get("/api/users", async (req, res) => {
   const session = req.session as any;
   const authenticatedUserId = session.userId;
+  console.log(session);
 
   try {
     if (authenticatedUserId === undefined) {

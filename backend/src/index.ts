@@ -32,7 +32,8 @@ app.use(
       maxAge: 1000 * 60 * 60,
       sameSite: "none",
       secure: true,
-      domain: "sheol-shop-api.onrender.com"
+      domain: "sheol-shop-api.onrender.com",
+      httpOnly: false
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
