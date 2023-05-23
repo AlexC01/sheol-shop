@@ -48,7 +48,8 @@ app.use(
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: "sheol-shop-api.onrender.com"
+      domain: "sheol-shop-api.onrender.com",
+      sameSite: "none"
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
