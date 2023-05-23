@@ -48,7 +48,7 @@ app.use(
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: ".sheol-shop.vercel.app"
+      domain: "sheol-shop.vercel.app"
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
