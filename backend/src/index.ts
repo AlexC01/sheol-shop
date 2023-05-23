@@ -21,7 +21,7 @@ import MongoStore from "connect-mongo";
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
-
+app.set("trust proxy", 1);
 const corsOptions = {
   origin: "https://sheol-shop.vercel.app",
   credentials: true
@@ -47,7 +47,8 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: true,
-      httpOnly: true
+      httpOnly: true,
+      domain: ".sheol-shop.vercel.app"
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
