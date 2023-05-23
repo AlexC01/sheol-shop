@@ -23,7 +23,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 app.set("trust proxy", 1);
 const corsOptions = {
-  origin: "https://sheol-shop.vercel.app",
+  origin: "https://sheol-shop.onrender.com",
   credentials: true
   // methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
   // allowedHeaders: [
@@ -47,9 +47,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: true,
-      httpOnly: true,
-      domain: "sheol-shop.vercel.app",
-      sameSite: "none"
+      httpOnly: true
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
