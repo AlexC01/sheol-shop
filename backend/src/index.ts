@@ -32,7 +32,6 @@ app.use(
       maxAge: 1000 * 60 * 60,
       sameSite: "none",
       secure: true,
-      domain: "sheol-shop-api.onrender.com",
       httpOnly: false
     },
     store: MongoStore.create({
@@ -58,7 +57,6 @@ const corsOptions = {
   exposedHeaders: "Set-Cookie"
 };
 app.use(cors(corsOptions));
-app.set("trust proxy", true);
 app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
