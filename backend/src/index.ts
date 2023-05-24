@@ -24,7 +24,8 @@ const PORT = process.env.PORT ?? 3030;
 app.set("trust proxy", 1);
 const corsOptions = {
   origin: "https://sheol-shop.vercel.app",
-  credentials: true
+  credentials: true,
+  exposedHeaders: "Set-Cookie"
   // methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
   // allowedHeaders: [
   //   "Content-Type",
@@ -36,7 +37,6 @@ const corsOptions = {
   //   "x-client-secret",
   //   "Authorization"
   // ],
-  // exposedHeaders: "Set-Cookie"
 };
 app.use(cors(corsOptions));
 
