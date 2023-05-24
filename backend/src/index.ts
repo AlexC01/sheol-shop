@@ -21,22 +21,11 @@ import MongoStore from "connect-mongo";
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
-app.set("trust proxy", 1);
+app.enable("trust proxy");
 const corsOptions = {
   origin: "https://sheol-shop.vercel.app",
   credentials: true,
-  exposedHeaders: "Set-Cookie"
-  // methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
-  // allowedHeaders: [
-  //   "Content-Type",
-  //   "Origin",
-  //   "X-Requested-With",
-  //   "Accept",
-  //   "x-client-key",
-  //   "x-client-token",
-  //   "x-client-secret",
-  //   "Authorization"
-  // ],
+  exposedHeaders: ["Set-Cookie", "set-cookie"]
 };
 app.use(cors(corsOptions));
 
@@ -48,7 +37,7 @@ app.use(
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: "sheol-shop-api.onrender.com",
+      domain: "sheol-shop.vercel.app",
       sameSite: "none"
     },
     store: MongoStore.create({
