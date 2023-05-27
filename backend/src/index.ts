@@ -23,7 +23,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 app.enable("trust proxy");
 const corsOptions = {
-  origin: "https://sheol-shop.vercel.app",
+  origin: "https://sheol-shop.acuadraq.com",
   credentials: true,
   exposedHeaders: ["Set-Cookie", "set-cookie"]
 };
@@ -32,12 +32,12 @@ app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRET ?? "",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: "sheol-shop.vercel.app",
       sameSite: "none"
     },
     store: MongoStore.create({
