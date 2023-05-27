@@ -37,7 +37,7 @@ app.use(
     rolling: true,
     cookie: {
       secure: true,
-      domain: ".acuadraq.com",
+      domain: ".sheol-shop.acuadraq.com",
       httpOnly: true,
       sameSite: "none"
     },
