@@ -37,6 +37,7 @@ app.use(
     rolling: true,
     cookie: {
       secure: true,
+      domain: ".acuadraq.com",
       httpOnly: true,
       sameSite: "none"
     },
