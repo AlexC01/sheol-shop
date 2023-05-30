@@ -49,18 +49,18 @@ router.post("/api/categories", upload.single("thumbnail"), async (req, res) => {
   }
 });
 
-router.patch("/api/categories/:id", upload.single("image"), async (req, res) => {
+router.patch("/api/categories/:id", upload.single("thumbnail"), async (req, res) => {
   const { file } = req;
   const updates = req.body;
   try {
     if (file !== undefined) {
       const { imagePath, toFilePath } = imagePaths(file.filename);
       await sharp(file.path)
-        .resize(IMAGES_RESOLUTIONS.hero.width, IMAGES_RESOLUTIONS.hero.height)
+        .resize(IMAGES_RESOLUTIONS.thumbnail.width, IMAGES_RESOLUTIONS.thumbnail.height)
         .webp()
         .toFile(toFilePath);
       fs.unlinkSync(file.path);
-      updates.image = imagePath;
+      updates.thumbnail = imagePath;
     }
     const category = await Category.findOne({ _id: req.params.id });
     if (category === null) return res.status(404).send();
