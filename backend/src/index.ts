@@ -25,7 +25,7 @@ app.enable("trust proxy");
 const corsOptions = {
   origin: "https://sheol-shop.acuadraq.com",
   credentials: true,
-  exposedHeaders: ["Set-Cookie", "set-cookie"]
+  exposedHeaders: ["Set-Cookie"]
 };
 app.use(cors(corsOptions));
 
