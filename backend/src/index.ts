@@ -37,9 +37,7 @@ app.use(
     rolling: true,
     cookie: {
       secure: true,
-      domain: ".sheol-shop.acuadraq.com",
-      httpOnly: true,
-      sameSite: "none"
+      maxAge: 1000 * 60 * 60
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_CONNECTION_STRING ?? ""
