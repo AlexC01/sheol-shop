@@ -13,7 +13,7 @@ class APIClient {
       response => {
         // Check if the response contains the 'Set-Cookie' header
         const setCookieHeader = response.headers["Set-Cookie"];
-        console.log(setCookieHeader);
+        console.log(response.headers);
         if (setCookieHeader) {
           // Extract the cookie value from the header
           const cookie = setCookieHeader[0];
