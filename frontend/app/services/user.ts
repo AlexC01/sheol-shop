@@ -12,7 +12,7 @@ export const logIn = async (body: UserLogIn) => {
   clientAPI.client.defaults.withCredentials = true;
 
   const response = await clientAPI.client.post("/users/login", body);
-  console.log(response.headers["set-cookie"]);
+  console.log(response.headers);
   return response.data;
 };
 
