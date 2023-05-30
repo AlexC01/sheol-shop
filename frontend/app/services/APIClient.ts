@@ -10,10 +10,22 @@ class APIClient {
     });
 
     this.client.interceptors.response.use(
-      response => response,
+      response => {
+        // Check if the response contains the 'Set-Cookie' header
+        const setCookieHeader = response.headers["Set-Cookie"];
+        console.log(setCookieHeader);
+        if (setCookieHeader) {
+          // Extract the cookie value from the header
+          const cookie = setCookieHeader[0];
+
+          // Set the cookie on the browser
+          document.cookie = cookie;
+        }
+
+        return response;
+      },
       error => {
-        const { response } = error;
-        return this.handleError(response);
+        return Promise.reject(error);
       }
     );
   }
