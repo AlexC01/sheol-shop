@@ -21,9 +21,8 @@ import MongoStore from "connect-mongo";
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
-app.enable("trust proxy");
 const corsOptions = {
-  origin: "https://sheol-shop.acuadraq.com",
+  origin: ["https://sheol-shop.acuadraq.com", "http://localhost:3000"],
   credentials: true,
   exposedHeaders: ["Set-Cookie"]
 };
@@ -37,7 +36,7 @@ app.use(
     rolling: true,
     cookie: {
       secure: true,
-      maxAge: 1000 * 60 * 60,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       sameSite: "none",
       httpOnly: true
     },

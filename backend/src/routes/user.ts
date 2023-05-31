@@ -91,6 +91,13 @@ router.post("/api/users/login", async (req, res) => {
     session.userId = user._id;
 
     const token = await user.generateAuthToken();
+    res.header("Access-Control-Expose-Headers", "Set-Cookie");
+    res.cookie("connect.sid", session.id, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    });
     return res.send({ user, token });
   } catch (err) {
     return res.status(400).send(err);
